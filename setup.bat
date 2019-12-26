@@ -18,7 +18,12 @@ pip install -r requirements.txt
 echo Requirements installed
 
 echo.
+echo First part of setup completed.
+echo.
 
+py setup.py
+
+echo.
 echo Setup completed.
 pause
 

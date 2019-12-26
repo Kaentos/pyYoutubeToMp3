@@ -30,7 +30,6 @@ if __name__ == "__main__":
         zip_file.extractall("Temp/")
     print("Unzipped successfully.")
 
-    # Copies necessary files to venv/scripts
     print("Copying necessary files...")
     for file_name in os.listdir(f"Temp/{Info['ffmpeg']['fileName']}/bin"):
         print(file_name)
