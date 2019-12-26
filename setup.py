@@ -2,6 +2,7 @@ from configparser import ConfigParser
 import requests
 import zipfile
 import os
+import shutil
 
 if __name__ == "__main__":
     Info = ConfigParser()
@@ -12,12 +13,30 @@ if __name__ == "__main__":
     rContent = requests.get(url)
     print("ffmpeg.zip downloaded.")
 
-    with open("ffmpeg.zip", "wb") as file:
-        file.write(rContent.content)
-    
-    with zipfile.ZipFile("ffmpeg.zip", "r") as zip_file:
-        zip_file.extractall("Temp")
+    print("Creating Temp/...")
+    try:
+        os.mkdir("Temp")
+    except OSError:
+        print ("Error creating folder.")
+    print ("Temp/ was successfully created.")
 
-    print("Removing ffmpeg.zip...")
-    os.remove("ffmpeg.zip")
-    print("ffmpeg.zip removed.")
+    print("Saving ffmpeg.zip to Temp/...")
+    with open("Temp/ffmpeg.zip", "wb") as file:
+        file.write(rContent.content)
+    print("Saved successfully.")
+    
+    print("Unzipping ffmpeg.zip...")
+    with zipfile.ZipFile("Temp/ffmpeg.zip", "r") as zip_file:
+        zip_file.extractall("Temp/")
+    print("Unzipped successfully.")
+
+    # Copies necessary files to venv/scripts
+    print("Copying necessary files...")
+    for file_name in os.listdir(f"Temp/{Info['ffmpeg']['fileName']}/bin"):
+        print(file_name)
+        shutil.copy(f"Temp/{Info['ffmpeg']['fileName']}/bin/{file_name}", f"venv/Scripts/{file_name}")
+    print("All files copied.")
+
+    print("Removing Temp/...")
+    shutil.rmtree("Temp/")
+    print("Temp/ removed.")
