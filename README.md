@@ -1,7 +1,7 @@
 
 # pyYoutubeToMp3
 
-Simple way of converting multiple youtube videos/music URLs from a file, that user inputs the URL, to mp3.
+Simple way of converting multiple youtube videos/music URLs from a file, that user inputs the URL, to mp3.<br/>
 It can only convert videos to .mp3
 
 ## Prerequisites
@@ -23,7 +23,7 @@ It can only convert videos to .mp3
 If you didn't get any [error](#errors) you are ready to go!
 
 ### How to use
-- Input videos URL in **musicURLs.txt**, each line must contain only one URL
+- Input videos URL in **musicURLs.txt**, each line must contain only one URL<br/>
 Example of a **musicURLs.txt** file:
 ``` 
 > Give a new line for each URL (link example: https://www.youtube.com/watch?v=Dqq2wXW3X2Q) <
