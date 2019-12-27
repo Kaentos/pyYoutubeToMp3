@@ -1,3 +1,4 @@
 venv/
 .vscode/
 Mp3/
+*.txt
