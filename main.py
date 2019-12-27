@@ -13,16 +13,17 @@ if __name__ == "__main__":
         }]
     }
 
+    basicURL = "https://www.youtube.com/watch?v="
+    testURL = "https://www.youtube.com/oembed?format=json&url="
+    validURLs = []
     with open("musicURLs.txt", "r") as file:
         URLs = file.readlines()
-        URLs = [url.strip("\n") for url in URLs]
-    print(URLs)
-    
-    # Validate URLs
-    URLs = [ url for url in URLs if "https://www.youtube.com/watch?v=" in url ]
-    testURL = "https://www.youtube.com/oembed?format=json&url="
-    URLs = [url for url in URLs if requests.get(f"{testURL}{url}").status_code == 200]
-    print(URLs)
+        for url in URLs:
+            url = url.strip("\n")
+            if basicURL in url:
+                if requests.get(f"{testURL}{url}").status_code == 200:
+                    validURLs.append(url)
+    print(validURLs)
 
     #https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v= get json from youtube (use to validate)
 
