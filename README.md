@@ -1,7 +1,8 @@
 
-# pyYoutubeDownloader
+# pyYoutubeToMp3
 
 Simple way of converting multiple youtube videos/music URLs from a file, that user inputs the URL, to mp3.
+It can only convert videos to .mp3
 
 ## Prerequisites
 
