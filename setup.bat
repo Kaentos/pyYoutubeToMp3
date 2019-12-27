@@ -14,7 +14,7 @@ echo Virtual environment activated
 echo.
 
 echo Installing requirements...
-pip install -r requirements.txt
+pip install -r Data\requirements.txt
 echo Requirements installed
 
 echo.

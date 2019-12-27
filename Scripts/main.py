@@ -16,7 +16,7 @@ def resetFile():
 
 if __name__ == "__main__":
     Info = ConfigParser()
-    Info.read("info.ini")
+    Info.read("Data/info.ini")
 
     checkFile()
 
