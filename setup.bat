@@ -21,7 +21,7 @@ echo.
 echo First part of setup completed.
 echo.
 
-py setup.py
+py Scripts\setup.py
 
 echo.
 echo Setup completed.

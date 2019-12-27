@@ -7,7 +7,7 @@ echo Virtual environment activated.
 echo.
 
 echo Running main.py...
-py main.py
+py Scripts\main.py
 
 pause
 deactivate
