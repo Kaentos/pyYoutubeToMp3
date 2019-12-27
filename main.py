@@ -15,9 +15,15 @@ if __name__ == "__main__":
     with open("musicURLs.txt", "r") as file:
         URLs = file.readlines()
         URLs = [url.strip("\n") for url in URLs]
-        #URLs = file.read()
-        #URLs = URLs.split(";")
-        print(URLs)
+    print(URLs)
+    
+    # Validate URLs
+    URLs = [ url for url in URLs[1:] if "https://www.youtube.com/watch?v=" in url ]
+    print(URLs)
+
 
     #with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     #    ydl.download([''])
+
+    with open("musicURLs.txt", "w") as file:
+        file.write("> Give a new line for each link (link example: https://www.youtube.com/watch?v=Dqq2wXW3X2Q) <")
