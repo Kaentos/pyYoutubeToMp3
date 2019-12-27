@@ -11,5 +11,13 @@ if __name__ == "__main__":
             "preferredquality": "192",
         }]
     }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download(['https://www.youtube.com/watch?v=dCuTWzy4PXA'])
+
+    with open("musicURLs.txt", "r") as file:
+        URLs = file.readlines()
+        URLs = [url.strip("\n") for url in URLs]
+        #URLs = file.read()
+        #URLs = URLs.split(";")
+        print(URLs)
+
+    #with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+    #    ydl.download([''])
