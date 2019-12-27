@@ -24,11 +24,16 @@ if __name__ == "__main__":
         "format": "bestaudio/best",
         "outtmpl": "Mp3/%(title)s.%(ext)s",
         "noplaylist": True,
-        "postprocessors": [{
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "mp3",
-            "preferredquality": "192",
-        }]
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+            },
+            {
+                'key': 'FFmpegMetadata'
+            },
+        ]
     }
 
     basicURL = "https://www.youtube.com/watch?v="
