@@ -1,7 +1,7 @@
 # pyYoutubeDownloader
 Coming soon...
 
-## Platforms OS
+## Supported OS
 - [Windows 10](#windows-10)
 ### Upcoming
 - Linux (Ubuntu)
