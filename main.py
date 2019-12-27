@@ -1,10 +1,12 @@
-import youtube_dl
+#import youtube_dl
+from youtube_dl import YoutubeDL
 import requests
 
 if __name__ == "__main__":
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": "Mp3/%(title)s.%(ext)s",
+        "noplaylist": True,
         "postprocessors": [{
             "key": "FFmpegExtractAudio",
             "preferredcodec": "mp3",
@@ -26,8 +28,9 @@ if __name__ == "__main__":
 
     #https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v= get json from youtube (use to validate)
 
-    #with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-    #    ydl.download([''])
+    with YoutubeDL(ydl_opts) as ydl:
+        for url in validURLs:
+            ydl.download([url])
 
     #with open("musicURLs.txt", "w") as file:
     #    file.write("> Give a new line for each link (link example: https://www.youtube.com/watch?v=Dqq2wXW3X2Q) <")
