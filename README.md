@@ -19,7 +19,7 @@ Simple way of converting multiple youtube videos/music URLs from a file, that us
 
 ### Installation
 - Run/Open [Setup.bat](setup.bat)
-If you didn't get any error you are ready to go!
+If you didn't get any [error](#errors) you are ready to go!
 
 ### How to use
 - Input videos URL in **musicURLs.txt**, each line must contain only one URL
@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=Dsq2wS26XxQ
 If you don't get any [error](#erros) check Mp3/ folder!
 
 ## Errors
-If you get any error, open an [issue](/issues)!
+If you get any error, open an [issue](/../../issues)!
 
 ## Contributing
 If you find that you have a better solution, new ideas, etc... just make a pull request!
