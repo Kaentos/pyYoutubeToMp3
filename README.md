@@ -42,4 +42,4 @@ If you get any error, open an [issue](/../../issues)!
 If you find that you have a better solution, new ideas, etc... just make a pull request!
 
 ## License
-This project is licensed under the The Unlicensed - see the [LICENSE](LICENCE) file for details
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
