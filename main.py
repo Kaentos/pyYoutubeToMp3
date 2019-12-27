@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from os import path
 
 def checkFile():
-    if not path.exists("musicURLs"):
+    if not path.exists("musicURLs.txt"):
         print("musicURLs.txt not found, creating a new one...")
         resetFile()
         print("musicURLs.txt created, you can now input your music URLs there.")
@@ -17,7 +17,7 @@ def resetFile():
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("info.ini")
-    
+
     checkFile()
 
     ydl_opts = {
