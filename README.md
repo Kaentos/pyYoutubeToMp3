@@ -19,7 +19,7 @@ It can only convert videos to .mp3
 ## Windows 10
 
 ### Installation
-- Run/Open [Setup.bat](setup.bat)
+- Run/Open [Setup.bat](setup.bat)<br/>
 If you didn't get any [error](#errors) you are ready to go!
 
 ### How to use
@@ -32,7 +32,7 @@ https://www.youtube.com/watch?v=Azq2w3D3w2Q
 https://www.youtube.com/watch?v=Dsq2wS26XxQ
 ```
 - Make sure URLs are correct
-- Run/Open [Run.bat](run.bat)
+- Run/Open [Run.bat](run.bat)<br/>
 If you don't get any [error](#erros) check Mp3/ folder!
 
 ## Errors
