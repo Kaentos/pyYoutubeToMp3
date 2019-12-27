@@ -39,3 +39,10 @@ if __name__ == "__main__":
     print("Removing Temp/...")
     shutil.rmtree("Temp/")
     print("Temp/ removed.")
+
+    print("Creating necessary files and folders...")
+    os.mkdir("Mp3")
+    print("Mp3/ created.")
+    with open("musicURLs.txt", "w") as file:
+        file.write(Info["txt"]["example"])
+    print("musicURLs.txt created.")

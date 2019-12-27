@@ -1,8 +1,12 @@
 #import youtube_dl
 from youtube_dl import YoutubeDL
 import requests
+from configparser import ConfigParser
 
 if __name__ == "__main__":
+    Info = ConfigParser()
+    Info.read("info.ini")
+
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": "Mp3/%(title)s.%(ext)s",
@@ -32,5 +36,5 @@ if __name__ == "__main__":
         for url in validURLs:
             ydl.download([url])
 
-    #with open("musicURLs.txt", "w") as file:
-    #    file.write("> Give a new line for each link (link example: https://www.youtube.com/watch?v=Dqq2wXW3X2Q) <")
+    with open("musicURLs.txt", "w") as file:
+        file.write(Info["txt"]["example"])
