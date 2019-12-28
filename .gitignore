@@ -1,4 +1,8 @@
+# Folders
 venv/
 .vscode/
 Mp3/
+SinglePlaylist/
+
+# Files
 musicURLs.txt

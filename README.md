@@ -23,6 +23,8 @@ It can only convert videos to .mp3
 If you didn't get any [error](#errors) you are ready to go!
 
 ### How to use
+
+#### One or more music videos
 - Input videos URL in **musicURLs.txt**, each line must contain only one URL<br/>
 Example of a **musicURLs.txt** file:
 ``` 
@@ -34,6 +36,14 @@ https://www.youtube.com/watch?v=Dsq2wS26XxQ
 - Make sure URLs are correct
 - Run/Open [Run.bat](run.bat)<br/>
 If you don't get any [error](#erros) check Mp3/ folder!
+
+#### One playlist
+- Run/Open [downloadPlaylist.bat](downloadPlaylist.bat)
+- Input playlist url to the command prompt<br/>
+If you don't get any [error](#erros) check SinglePlaylist/ folder!
+
+#### More than one playlist
+Coming soon...
 
 ## Errors
 If you get any error, open an [issue](/../../issues)!
