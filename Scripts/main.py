@@ -37,14 +37,13 @@ if __name__ == "__main__":
     }
 
     basicURL = "https://www.youtube.com/watch?v="
-    testURL = "https://www.youtube.com/oembed?format=json&url="
     validURLs = []
     with open("musicURLs.txt", "r") as file:
         URLs = file.readlines()
         for url in URLs:
             url = url.strip("\n")
             if basicURL in url:
-                if requests.get(f"{testURL}{url}").status_code == 200:
+                if requests.get(f"{Info['yt']['checkLink']}{url}").status_code == 200:
                     validURLs.append(url)
     if validURLs:
         print(f"URLs to download: {validURLs}")
