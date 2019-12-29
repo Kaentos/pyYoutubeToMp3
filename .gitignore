@@ -1,4 +1,9 @@
+# Folders
 venv/
 .vscode/
 Mp3/
+SinglePlaylist/
+__pycache__/
+
+# Files
 musicURLs.txt
