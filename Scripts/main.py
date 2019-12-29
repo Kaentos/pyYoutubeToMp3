@@ -42,11 +42,15 @@ if __name__ == "__main__":
     validURLs = []
     with open("musicURLs.txt", "r") as file:
         URLs = file.readlines()
-        for url in URLs:
-            url = url.strip("\n")
-            if basicURL in url:
-                if requests.get(f"{Info['yt']['checkLink']}{url}").status_code == 200:
-                    validURLs.append(url)
+        if len(URLs) > 0:
+            for url in URLs:
+                url = url.strip("\n")
+                if basicURL in url:
+                    if requests.get(f"{Info['yt']['checkLink']}{url}").status_code == 200:
+                        validURLs.append(url)
+        else:
+            print("There are no URLs in musicURLs.txt.")
+            exit()
     if validURLs:
         print(f"URLs to download: {validURLs}")
         with YoutubeDL(ydl_opts) as ydl:
