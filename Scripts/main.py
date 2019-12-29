@@ -2,6 +2,7 @@ from youtube_dl import YoutubeDL
 import requests
 from configparser import ConfigParser
 from os import path
+from checkFolders import checkMp3
 
 def checkFile():
     if not path.exists("musicURLs.txt"):
@@ -19,6 +20,7 @@ if __name__ == "__main__":
     Info.read("Data/info.ini")
 
     checkFile()
+    checkMp3()
 
     ydl_opts = {
         "format": "bestaudio/best",

@@ -1,10 +1,13 @@
 from youtube_dl import YoutubeDL
 import requests
 from configparser import ConfigParser
+from checkFolders import checkSinglePlaylist
 
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("Data/info.ini")
+    
+    checkSinglePlaylist()
 
     ydl_opts = {
         "format": "bestaudio/best",
