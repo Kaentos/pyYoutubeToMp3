@@ -1,26 +1,16 @@
 from youtube_dl import YoutubeDL
 import requests
 from configparser import ConfigParser
-from os import path
-from checkFolders import checkMp3
+import checkFunctions
+import resetFunctions
 
-def checkFile():
-    if not path.exists("musicURLs.txt"):
-        print("musicURLs.txt not found, creating a new one...")
-        resetFile()
-        print("musicURLs.txt created, you can now input your music URLs there.")
-        exit()
-
-def resetFile():
-    with open("musicURLs.txt", "w") as file:
-        file.write(Info["txt"]["example"])
 
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("Data/info.ini")
 
-    checkFile()
-    checkMp3()
+    checkFunctions.checkURLFile()
+    checkFunctions.checkMp3()
 
     ydl_opts = {
         "format": "bestaudio/best",
@@ -61,4 +51,4 @@ if __name__ == "__main__":
         print("There are no videos to convert, did you input some in musicURLs.txt? Did you input them correctly?")
         exit()
 
-    resetFile()
+    resetFunctions.resetFile()
