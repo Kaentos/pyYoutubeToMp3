@@ -21,7 +21,7 @@ def printTitle(title):
     print(f"\n\n\n> {title} <")
 
 def printSubTitle(title):
-    print(f"{title}")
+    print(f"\n# {title}")
 
 def printBack():
     print("0) Back")
@@ -34,7 +34,15 @@ def printConvertType():
     return input("Option: ")
 
 def printAudioFormats():
-    return "None"
+    audio_formats = ["ALAC", "FLAC", "MP3", "OGG", "WAV"]
+    printSubTitle("Availabe audio formats:")
+    for i, text in enumerate(audio_formats):
+        print(f"{i+1}) {text}")
+    printBack()
+
+    op = getOP()
+
+    return "None" # will return var with chosen format
 
 def printVideoFormats():
     return "None"
@@ -48,8 +56,7 @@ def printInvalidOption(invalidType):
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("Data/info.ini")
-
-    audio_formats = ["ALAC", "FLAC", "MP3", "OGG", "WAV"]
+    
     video_formats = ["AVI", "MOV", "MP4", "WEBM", "WMV"]
     ytOptions = ["Single Video", "Multiples Videos", "Single Playlist", "Multiples Playlists"]
     ytAlias = [
