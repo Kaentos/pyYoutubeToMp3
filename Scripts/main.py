@@ -58,7 +58,7 @@ def printConvertType():
 
 def getAudioFormat():
     while(True):
-        audio_formats = ["ALAC", "FLAC", "MP3", "OGG", "WAV"]
+        audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
         printSubTitle("Availabe audio formats:")
         for i, text in enumerate(audio_formats):
             print(f"{i+1}) {text}")
