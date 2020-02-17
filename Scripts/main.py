@@ -18,7 +18,7 @@ class DownloadOptions:
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
-                    "preferredcodec": "mp3",
+                    "preferredcodec": self.fileFormat,
                     "preferredquality": "192",
                 },
                 {
@@ -69,6 +69,8 @@ def getAudioFormat():
                 return op
             elif int(op) in range(1, len(audio_formats) + 1):
                 return audio_formats[int(op) - 1]
+            elif int(op) == 0 or op.lower() in ["back", "b"]:
+                return 0
             else:
                 print("Not a valid format.\n")
         except ValueError:
@@ -112,14 +114,20 @@ if __name__ == "__main__":
         printBack()
         getOP()
         if any(alias in op for alias in ytAlias[0]): # single video
+            DownOptions.isPlaylist = False
             printTitle(ytOptions[0])
             while True:
                 convertType = printConvertType()
-                if convertType == "1":
+                if convertType == "1": # audio
                     DownOptions.fileFormat = getAudioFormat()
-                    print(DownOptions.fileFormat)
+                    if DownOptions.fileFormat == 0: # Wants to go back
+                        print("\n<-- back\n")
+                        break
+                    else:
+                        print(DownOptions.fileFormat)
+                        print(DownOptions.ytdl_options())
                     break
-                elif convertType == "2":
+                elif convertType == "2": # video
                     printVideoFormats()
                     break
                 elif goBack(convertType):
@@ -129,14 +137,17 @@ if __name__ == "__main__":
                 
 
         elif any(alias in op for alias in ytAlias[1]): # multiple videos
+            DownOptions.isPlaylist = False
             printTitle(ytOptions[1])
             printConvertType()
 
         elif any(alias in op for alias in ytAlias[2]): # single playlist
+            DownOptions.isPlaylist = True
             printTitle(ytOptions[2])
             printConvertType()
 
         elif any(alias in op for alias in ytAlias[3]): # multiple playlists
+            DownOptions.isPlaylist = True
             printTitle(ytOptions[3])
             printConvertType()
 
