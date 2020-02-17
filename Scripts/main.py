@@ -4,6 +4,29 @@ from configparser import ConfigParser
 import checkFunctions
 import resetFunctions
 
+class DownloadOptions:
+    def __init__(self):
+        self.fileType = None
+        self.isPlaylist = None
+        self.fileFormat = None
+
+    def ytdl_options(self):
+        options = {
+            "format": "bestaudio/best",
+            "outtmpl": "Mp3/%(title)s.%(ext)s",
+            "noplaylist": self.isPlaylist,
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                },
+                {
+                    'key': 'FFmpegMetadata'
+                },
+            ]
+        }
+        return options
 
 def getOP():
     return input("Option: ").lower()
@@ -33,16 +56,24 @@ def printConvertType():
     printBack()
     return input("Option: ")
 
-def printAudioFormats():
-    audio_formats = ["ALAC", "FLAC", "MP3", "OGG", "WAV"]
-    printSubTitle("Availabe audio formats:")
-    for i, text in enumerate(audio_formats):
-        print(f"{i+1}) {text}")
-    printBack()
+def getAudioFormat():
+    while(True):
+        audio_formats = ["ALAC", "FLAC", "MP3", "OGG", "WAV"]
+        printSubTitle("Availabe audio formats:")
+        for i, text in enumerate(audio_formats):
+            print(f"{i+1}) {text}")
+        printBack()
+        op = getOP().upper()
+        try:
+            if op in audio_formats:
+                return op
+            elif int(op) in range(1, len(audio_formats) + 1):
+                return audio_formats[int(op) - 1]
+            else:
+                print("Not a valid format.\n")
+        except ValueError:
+            pass
 
-    op = getOP()
-
-    return "None" # will return var with chosen format
 
 def printVideoFormats():
     return "None"
@@ -65,7 +96,7 @@ if __name__ == "__main__":
         ["3", "single playlist", "singleplaylist", "1 playlist", "1playlist", "playlist", "play", "list", "sp", "s p"],
         ["4", "multiple playlists", "multipleplaylists", "playlists", "lists", "plays", "mp", "m p"]
     ]
-
+    DownOptions = DownloadOptions()
     print("Welcome to <projectname>!")
     print("What do you wish to do?")
     print("1) Youtube converter / downloader")
@@ -74,6 +105,7 @@ if __name__ == "__main__":
     op = getOP()
 
     if op == "1" or any(alias in op for alias in ["youtube", "yt"]):
+        DownOptions.fileType = "video"
         print("\n\n\n> Youtube <")
         for i, text in enumerate(ytOptions):
             print(f"{i+1}) {text}")
@@ -84,7 +116,8 @@ if __name__ == "__main__":
             while True:
                 convertType = printConvertType()
                 if convertType == "1":
-                    printAudioFormats()
+                    DownOptions.fileFormat = getAudioFormat()
+                    print(DownOptions.fileFormat)
                     break
                 elif convertType == "2":
                     printVideoFormats()
