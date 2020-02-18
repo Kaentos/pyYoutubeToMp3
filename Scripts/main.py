@@ -1,6 +1,7 @@
 from youtube_dl import YoutubeDL
 import requests
 from configparser import ConfigParser
+import os
 import checkFunctions
 import resetFunctions
 
@@ -90,6 +91,25 @@ def printInvalidOption(invalidType):
 #        End Prints        #
 ############################
 
+def getURL():
+    while True:
+        link = checkURL(input("Youtube video URL or Code: "))
+        if link == -1:
+            return -1
+        elif link:
+            return link
+            
+
+def checkURL(link):
+    if "www.youtube.com/watch?v=" in link or len(link) == 11:
+        print("URL/Code is here")
+        return True
+    elif link == -1 or link in ["back", "b"]:
+        return -1
+    else:
+        print("Invalid URL or Code, url must contain www.youtube.com/watch?v=<code> and code must be 11 characters long.")
+        return False
+
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("Data/info.ini")
@@ -128,8 +148,10 @@ if __name__ == "__main__":
                         print("<-- back\n")
                         break
                     else:
-                        print(DownOptions.fileFormat)
-                        print(DownOptions.ytdl_options())
+                        getURL()
+                        
+                        #print(DownOptions.fileFormat)
+                        #print(DownOptions.ytdl_options())
                     break
                 elif convertType == "2": # video
                     printVideoFormats()
