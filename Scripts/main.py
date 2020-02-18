@@ -66,11 +66,11 @@ def getAudioFormat():
         op = getOP().upper()
         try:
             if op in audio_formats:
-                return op
+                return op.lower()
             elif int(op) in range(1, len(audio_formats) + 1):
-                return audio_formats[int(op) - 1]
+                return audio_formats[int(op) - 1].lower()
             elif int(op) == 0 or op.lower() in ["back", "b"]:
-                return 0
+                return False
             else:
                 print("Not a valid format.\n")
         except ValueError:
@@ -120,8 +120,8 @@ if __name__ == "__main__":
                 convertType = printConvertType()
                 if convertType == "1": # audio
                     DownOptions.fileFormat = getAudioFormat()
-                    if DownOptions.fileFormat == 0: # Wants to go back
-                        print("\n<-- back\n")
+                    if not DownOptions.fileFormat: # Wants to go back
+                        print("<-- back\n")
                         break
                     else:
                         print(DownOptions.fileFormat)
