@@ -15,11 +15,15 @@ class DownloadOptions:
             "format": "bestaudio/best",
             "outtmpl": "Mp3/%(title)s.%(ext)s",
             "noplaylist": self.isPlaylist,
+            'writethumbnail': True,
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
                     "preferredcodec": self.fileFormat,
                     "preferredquality": "192",
+                },
+                {
+                    'key': 'EmbedThumbnail'
                 },
                 {
                     'key': 'FFmpegMetadata'
