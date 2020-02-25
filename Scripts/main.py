@@ -16,7 +16,6 @@ class DownloadOptions:
             "format": "bestaudio/best",
             "outtmpl": "Mp3/%(title)s.%(ext)s",
             "noplaylist": self.isPlaylist,
-            'writethumbnail': True,
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
@@ -24,13 +23,13 @@ class DownloadOptions:
                     "preferredquality": "192",
                 },
                 {
-                    'key': 'EmbedThumbnail'
-                },
-                {
                     'key': 'FFmpegMetadata'
                 },
             ]
         }
+        if self.fileFormat in "mp3":
+            options["writethumbnail"] = True
+            options["postprocessors"].append({ "key" : "EmbedThumbnail" })
         return options
 
 def getOP():
@@ -102,13 +101,17 @@ def getURL():
 
 def checkURL(link):
     if "www.youtube.com/watch?v=" in link or len(link) == 11:
-        print("URL/Code is here")
-        return True
+        return link
     elif link == -1 or link in ["back", "b"]:
         return -1
     else:
         print("Invalid URL or Code, url must contain www.youtube.com/watch?v=<code> and code must be 11 characters long.")
         return False
+
+def downloadVideo(yt_options, url): # Download video from youtube
+    with YoutubeDL(yt_options) as ytdl:
+        ytdl.download([url])
+
 
 if __name__ == "__main__":
     Info = ConfigParser()
@@ -125,7 +128,7 @@ if __name__ == "__main__":
     DownOptions = DownloadOptions()
     print("Welcome to <projectname>!")
     print("What do you wish to do?")
-    print("1) Youtube converter / downloader")
+    print("1) Youtube downloader")
     print("2) Local converter")
     print("0) Exit")
     op = getOP()
@@ -148,7 +151,7 @@ if __name__ == "__main__":
                         print("<-- back\n")
                         break
                     else:
-                        getURL()
+                        downloadVideo(DownOptions.ytdl_options(), getURL())
                         
                         #print(DownOptions.fileFormat)
                         #print(DownOptions.ytdl_options())
