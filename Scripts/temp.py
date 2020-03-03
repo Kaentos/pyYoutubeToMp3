@@ -1,5 +1,42 @@
+import requests
+import os
+
+## This file will replace main.py
+
 def getOP():
     return input("Option: ")
+
+def getVideoURL(alias):
+    print("URL must at least contain www.youtube.com/watch?v= / ID must be 11 characters long.")
+    while True:
+        url = input("URL/ID: ")
+        if "www.youtube.com/watch?v=" in url:
+            if checkURL(url):
+                return url
+        elif len(url) == 11: # 11 = length of video id
+            if checkURL(f"www.youtube.com/watch?v={url}"):
+                return url
+        elif url in alias["back"]:
+            return None
+
+def getPlaylistURL(alias):
+    print("URL must contain www.youtube.com/playlist?list= or www.youtube.com/watch?=<id>&list= / ID must be 34 characters long.")
+    while True:
+        url = input("URL/ID: ")
+        if "www.youtube.com/playlist?list=" in url or "&?list=" in url:
+            if checkURL(url):
+                return url
+        elif len(url) == 34:
+            if checkURL(f"https://www.youtube.com/oembed?format=json&url=www.youtube.com/playlist?list={url}"):
+                return url
+        elif url in alias["back"]:
+            return None
+
+def checkURL(url):
+    if requests.get(f"https://www.youtube.com/oembed?format=json&url={url}").status_code == 200:
+        return True
+    else:
+        return False
 
 alias = { # Dict that stores alias for options
     ## type of conversion ##
@@ -11,6 +48,13 @@ alias = { # Dict that stores alias for options
     "audio_type" : [ "1", "a", "aux", "audio" ],
     "video_type" : [ "2", "v", "vid", "video" ],
     ## End file type ##
+
+    ## Conversion options ##
+    "1video" : ["1", "single video", "singlevideo", "1 video", "1video", "single v", "singlev", "s video", "svideo", "video", "s v", "sv", "1 v", "1v", "v"],
+    ">1video" : ["2", "multiple videos", "multiplevideos", "m videos", "mvideos", "multiple v", "multiplev", "m v", "mv", "vs"],
+    "1playlist" : ["3", "single playlist", "singleplaylist", "1 playlist", "1playlist", "playlist", "play", "list", "sp", "s p"],
+    ">1playlist" : ["4", "multiple playlists", "multipleplaylists", "playlists", "lists", "plays", "mp", "m p"],
+    ## End conversion options ##
 
     ## Back option ##
     "back": ["0", "b", "back", "exit"]
@@ -34,7 +78,7 @@ while True: # Main loop
                     op = getOP().lower()
                     if op not in audio_formats: # check if user inputed number
                         try:
-                            selected_format = audio_formats[int(op) - 1]
+                            selected_format = audio_formats[int(op) - 1].lower()
                         except (ValueError, IndexError): # handle not numbers and index out of bounds
                             print("Invalid audio format.")
                             continue
@@ -56,12 +100,34 @@ while True: # Main loop
                 continue
 
             # Get option (1 video, >1 videos, 1 playlist, >1 playlist)
-            while op not in alias["back"]:
-                print("Menu 3 / pedir opção se é para um ou mais videos/playlists")
-                op = getOP()
-                print("faz")
-                op = "back"
-        continue
+            if op not in alias["back"]:
+                print("What do you which to convert?")
+                print("1) Single video\n2) Multiple videos\n3) Single playlist\n4) Multiple playlists")
+                while True:
+                    op = getOP()
+                    if op in alias["1video"]:
+                        url = getVideoURL(alias)
+                        if url:
+                            pass #download
+                        break
+                    elif op in alias[">1video"]:
+                        ## open text file
+                        break
+                    elif op in alias["1playlist"]:
+                        url = getPlaylistURL(alias)
+                        if url:
+                            pass #download
+                        break
+                    elif op in alias[">1playlist"]:
+                        ## open text file
+                        break
+
+            print(selected_format)
+            print(op)
+            print("Do you wish to exit? (y/n)")
+            op = getOP()
+            if op == "y" or op == "yes":
+                exit()
 
 
 
