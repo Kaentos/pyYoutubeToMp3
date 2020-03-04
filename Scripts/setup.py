@@ -4,6 +4,10 @@ import zipfile
 import os
 import shutil
 
+# Rework setup
+# Add better try excepts
+# Create folders: Downloads
+ 
 if __name__ == "__main__":
     Info = ConfigParser()
     Info.read("Data/info.ini")

@@ -1,6 +1,7 @@
 import requests
 import os
 from youtube_dl import YoutubeDL
+from datetime import datetime
 
 ## This file will replace main.py
 
@@ -8,11 +9,17 @@ class youtube_dlOptions:
     def __init__(self):
         self.isPlaylist = None
         self.fileFormat = None
+        self.folderName = None
+
+    def setFolderName(self):
+        now = datetime.now()
+        newName = now.strftime("%Y-%m-%d %H%M%S")
+        self.folderName = newName
 
     def getOptions(self):
         options = {
             "format": "bestaudio/best",
-            "outtmpl": "Mp3/%(title)s.%(ext)s",
+            "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s.%(ext)s",
             "noplaylist": not self.isPlaylist,
             "postprocessors": [
                 {
@@ -29,6 +36,7 @@ class youtube_dlOptions:
             options["writethumbnail"] = True
             options["postprocessors"].append({ "key" : "EmbedThumbnail" })
         return options
+
 
 def getOP():
     return input("Option: ")
@@ -70,7 +78,6 @@ def checkURL(url):
 def downloadOne(url, ytdl_options):
     print(ytdl_options)
     print(url)
-    return
     with YoutubeDL(ytdl_options) as ytdl:
         ytdl.download([url])
 
@@ -141,10 +148,10 @@ while True: # Main loop
                     op = getOP()
                     if op in alias["1video"]:
                         downloadOptions.isPlaylist = False
+                        downloadOptions.setFolderName()
                         url = getVideoURL(alias)
                         if url:
                             downloadOne(url, downloadOptions.getOptions())
-                            pass #download
                         break
                     elif op in alias[">1video"]:
                         downloadOptions.isPlaylist = False
@@ -160,7 +167,7 @@ while True: # Main loop
                         downloadOptions.isPlaylist = True
                         ## open text file
                         break
-                    
+
             if op in alias["back"]:
                 break
             else: 
