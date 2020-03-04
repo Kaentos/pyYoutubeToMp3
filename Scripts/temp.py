@@ -108,7 +108,7 @@ audio_formats = ["MP3", "ACC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
 downloadOptions = youtube_dlOptions()
 
 while True: # Main loop
-    print("1) Start converting\n2) Settings / Options\n0) Exit")
+    print("1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
     op = getOP()
     if op == "1": # Youtube Converter
         while op not in alias["back"]: # get file type (audio or video)
@@ -177,9 +177,9 @@ while True: # Main loop
                     exit()
 
 
-
-
-    elif op == "2": # menu 2 / settings
+    elif op == "2":
+        os.startfile("Downloads")
+    elif op == "3": # menu 2 / settings
         print("Coming soon...")
         continue
     elif op in alias["back"]: # sair

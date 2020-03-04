@@ -6,7 +6,6 @@ import shutil
 
 # Rework setup
 # Add better try excepts
-# Create folders: Downloads
  
 if __name__ == "__main__":
     Info = ConfigParser()
@@ -45,10 +44,8 @@ if __name__ == "__main__":
     print("Temp/ removed.")
 
     print("Creating necessary files and folders...")
-    os.mkdir("Mp3")
-    print("Mp3/ created.")
-    os.mkdir("SinglePlaylist")
-    print("SinglePlaylist/ created.")
-    with open("musicURLs.txt", "w") as file:
+    os.mkdir("Downloads")
+    print("Downloads/ created.")
+    with open("url_input.txt", "w") as file:
         file.write(Info["txt"]["example"])
-    print("musicURLs.txt created.")
+    print("url_input.txt created.")
