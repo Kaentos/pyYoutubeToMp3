@@ -93,6 +93,8 @@ def openFileOrFolder(name):
         subprocess.call(["xdg-open", path])
     elif user_os == "darwin":
         subprocess.call(["open", path])
+    else:
+        raise OSError("Your platform isn't supported, please open an issue.")
 
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
