@@ -1,0 +1,23 @@
+{
+    "_c1" : "Type of conversion",
+    "youtube" : [ "1", "s", "start", "convert", "yt", "you", "tube", "youtube" ],
+    "settings" : [ "2", "set", "sett", "settings", "o", "op", "opt", "options"],
+    "_c2" : "End of type of conversion",
+
+    "_c3" : "File type",
+    "audio_type" : [ "1", "a", "aux", "audio" ],
+    "video_type" : [ "2", "v", "vid", "video" ],
+    "_c4" : "End file type",
+
+    "_c5" : "Conversion options",
+    "1video" : ["1", "single video", "singlevideo", "1 video", "1video", "single v", "singlev", "s video", "svideo", "video", "s v", "sv", "1 v", "1v", "v"],
+    ">1video" : ["2", "multiple videos", "multiplevideos", "m videos", "mvideos", "multiple v", "multiplev", "m v", "mv", "vs"],
+    "1playlist" : ["3", "single playlist", "singleplaylist", "1 playlist", "1playlist", "playlist", "play", "list", "sp", "s p"],
+    ">1playlist" : ["4", "multiple playlists", "multipleplaylists", "playlists", "lists", "plays", "mp", "m p"],
+    "_c6" : "End conversion options",
+
+    "_c7" : "Back option",
+    "back": ["0", "b", "back", "exit"],
+    "_c8" : "End back option"
+  
+}
