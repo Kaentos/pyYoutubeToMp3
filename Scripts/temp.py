@@ -2,6 +2,7 @@ import requests
 import os
 from youtube_dl import YoutubeDL
 from datetime import datetime
+import json
 
 ## Local files
 import classes
@@ -54,6 +55,14 @@ def downloadOne(url, ytdl_options):
     with YoutubeDL(ytdl_options) as ytdl:
         ytdl.download([url])
 
+def downloadMultiple(urls, ytdl_options):
+    print(ytdl_options)
+    for url in urls:
+        print(url)
+        with YoutubeDL(ytdl_options) as ytdl:
+            ytdl.download([url]) 
+    os.startfile("Downloads")
+
 def checkURLfromFile():
     with open("url_input.txt", "r") as f:
         fContent = f.readlines()
@@ -70,29 +79,10 @@ def checkURLfromFile():
     valid_urls = set(valid_urls)
     print("OK.")
     print(f"Valid urls: {valid_urls}")
+    return valid_urls
 
-alias = { # Dict that stores alias for options
-    ## type of conversion ##
-    "youtube" : [ "1", "s", "start", "convert", "yt", "you", "tube", "youtube" ],
-    "settings" : [ "2", "set", "sett", "settings", "o", "op", "opt", "options"],
-    ## End of type of conversion ##
-
-    ## File type ##
-    "audio_type" : [ "1", "a", "aux", "audio" ],
-    "video_type" : [ "2", "v", "vid", "video" ],
-    ## End file type ##
-
-    ## Conversion options ##
-    "1video" : ["1", "single video", "singlevideo", "1 video", "1video", "single v", "singlev", "s video", "svideo", "video", "s v", "sv", "1 v", "1v", "v"],
-    ">1video" : ["2", "multiple videos", "multiplevideos", "m videos", "mvideos", "multiple v", "multiplev", "m v", "mv", "vs"],
-    "1playlist" : ["3", "single playlist", "singleplaylist", "1 playlist", "1playlist", "playlist", "play", "list", "sp", "s p"],
-    ">1playlist" : ["4", "multiple playlists", "multipleplaylists", "playlists", "lists", "plays", "mp", "m p"],
-    ## End conversion options ##
-
-    ## Back option ##
-    "back": ["0", "b", "back", "exit"]
-    ## End back option ##
-}
+with open("Data/alias.json", "r") as f:
+    alias = json.load(f)
 
 audio_formats = ["MP3", "ACC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
 downloadOptions = classes.youtube_dlOptions()
@@ -149,7 +139,8 @@ while True: # Main loop
                             print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
                             op = getOP()
                             if op in ["yes", "y"]:
-                                checkURLfromFile()
+                                urls = checkURLfromFile()
+                                downloadMultiple(urls, downloadOptions.getOptions())
                                 break
                             elif op not in ["no", "n"]:
                                 break
@@ -171,7 +162,7 @@ while True: # Main loop
             else: 
                 print("Do you wish to exit? (y/n)")
                 op = getOP()
-                if op == "y" or op == "yes":
+                if op in ["y", "yes", alias["back"]]:
                     exit()
 
 
