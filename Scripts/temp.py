@@ -3,39 +3,12 @@ import os
 from youtube_dl import YoutubeDL
 from datetime import datetime
 
+## Local files
+import classes
+## End local files
+
+
 ## This file will replace main.py
-
-class youtube_dlOptions:
-    def __init__(self):
-        self.isPlaylist = None
-        self.fileFormat = None
-        self.folderName = None
-
-    def setFolderName(self):
-        now = datetime.now()
-        newName = now.strftime("%Y-%m-%d %H%M%S")
-        self.folderName = newName
-
-    def getOptions(self):
-        options = {
-            "format": "bestaudio/best",
-            "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s.%(ext)s",
-            "noplaylist": not self.isPlaylist,
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": self.fileFormat,
-                    "preferredquality": "192",
-                },
-                {
-                    'key': 'FFmpegMetadata'
-                },
-            ]
-        }
-        if self.fileFormat in "mp3":
-            options["writethumbnail"] = True
-            options["postprocessors"].append({ "key" : "EmbedThumbnail" })
-        return options
 
 
 def getOP():
@@ -81,6 +54,23 @@ def downloadOne(url, ytdl_options):
     with YoutubeDL(ytdl_options) as ytdl:
         ytdl.download([url])
 
+def checkURLfromFile():
+    with open("url_input.txt", "r") as f:
+        fContent = f.readlines()
+    
+    valid_urls = []
+    print("Validating urls...", end=" ")
+    for url in fContent:
+        url = url.strip("\n")
+        if checkURL(url):
+            valid_urls.append(url)
+    print("OK.")
+
+    print("Removing duplicated urls...", end=" ")
+    valid_urls = set(valid_urls)
+    print("OK.")
+    print(f"Valid urls: {valid_urls}")
+
 alias = { # Dict that stores alias for options
     ## type of conversion ##
     "youtube" : [ "1", "s", "start", "convert", "yt", "you", "tube", "youtube" ],
@@ -105,7 +95,7 @@ alias = { # Dict that stores alias for options
 }
 
 audio_formats = ["MP3", "ACC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
-downloadOptions = youtube_dlOptions()
+downloadOptions = classes.youtube_dlOptions()
 
 while True: # Main loop
     print("1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
@@ -148,14 +138,22 @@ while True: # Main loop
                     op = getOP()
                     if op in alias["1video"]:
                         downloadOptions.isPlaylist = False
-                        downloadOptions.setFolderName()
                         url = getVideoURL(alias)
                         if url:
                             downloadOne(url, downloadOptions.getOptions())
                         break
                     elif op in alias[">1video"]:
                         downloadOptions.isPlaylist = False
-                        ## open text file
+                        while True:
+                            os.startfile("url_input.txt")
+                            print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
+                            op = getOP()
+                            if op in ["yes", "y"]:
+                                checkURLfromFile()
+                                break
+                            elif op not in ["no", "n"]:
+                                break
+
                         break
                     elif op in alias["1playlist"]:
                         downloadOptions.isPlaylist = True
