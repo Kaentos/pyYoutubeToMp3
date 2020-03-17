@@ -4,11 +4,13 @@ class youtube_dlOptions:
     def __init__(self):
         self.isPlaylist = None
         self.fileFormat = None
+        self.folderName = None
 
     def getOptions(self):
+        self.folderName = datetime.now().strftime('%Y-%m-%d %H%M%S')
         options = {
             "format": "bestaudio/best",
-            "outtmpl": f"Downloads/{datetime.now().strftime('%Y-%m-%d %H%M%S')}" + "/%(title)s.%(ext)s",
+            "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s.%(ext)s",
             "noplaylist": not self.isPlaylist,
             "postprocessors": [
                 {

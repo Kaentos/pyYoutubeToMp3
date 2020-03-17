@@ -1,5 +1,8 @@
 import requests
 import os
+import subprocess
+import sys
+import pathlib
 from youtube_dl import YoutubeDL
 from datetime import datetime
 import json
@@ -60,8 +63,7 @@ def downloadMultiple(urls, ytdl_options):
     for url in urls:
         print(url)
         with YoutubeDL(ytdl_options) as ytdl:
-            ytdl.download([url]) 
-    os.startfile("Downloads")
+            ytdl.download([url])
 
 def checkURLfromFile():
     with open("url_input.txt", "r") as f:
@@ -81,10 +83,21 @@ def checkURLfromFile():
     print(f"Valid urls: {valid_urls}")
     return valid_urls
 
+def openFileOrFolder(name):
+    user_os = sys.platform
+    path = os.path.join(pathlib.Path().absolute(), name)
+    print(path)
+    if user_os == "win32":
+        subprocess.call(["explorer", path])
+    elif user_os == "linux":
+        subprocess.call(["xdg-open", path])
+    elif user_os == "darwin":
+        subprocess.call(["open", path])
+
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
-audio_formats = ["MP3", "ACC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
+audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
 downloadOptions = classes.youtube_dlOptions()
 
 while True: # Main loop
@@ -96,7 +109,7 @@ while True: # Main loop
             op = getOP()
             if op in alias["audio_type"]: # User choose audio type
                 print("\n\n> Audio format:\nThumbnail only available for MP3 and M4A formats.")
-                print("1) MP3\n2) ACC\n3) FLAC\n4) M4A\n5) OPUS\n6) VORBIS\n7) WAV\n0) Back")
+                print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) VORBIS\n7) WAV\n0) Back")
                 while True:
                     op = getOP().lower()
                     if op not in audio_formats: # check if user inputed number
@@ -131,20 +144,21 @@ while True: # Main loop
                         url = getVideoURL(alias)
                         if url:
                             downloadOne(url, downloadOptions.getOptions())
+                            openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
                         break
                     elif op in alias[">1video"]:
                         downloadOptions.isPlaylist = False
                         while True:
-                            os.startfile("url_input.txt")
+                            openFileOrFolder("url_input.txt")
                             print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
                             op = getOP()
                             if op in ["yes", "y"]:
                                 urls = checkURLfromFile()
                                 downloadMultiple(urls, downloadOptions.getOptions())
+                                openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
                                 break
                             elif op not in ["no", "n"]:
                                 break
-
                         break
                     elif op in alias["1playlist"]:
                         downloadOptions.isPlaylist = True
@@ -161,13 +175,13 @@ while True: # Main loop
                 break
             else: 
                 print("Do you wish to exit? (y/n)")
-                op = getOP()
+                op = getOP().replace(" ", "")
                 if op in ["y", "yes", alias["back"]]:
                     exit()
 
 
     elif op == "2":
-        os.startfile("Downloads")
+        openFileOrFolder("Downloads")
     elif op == "3": # menu 2 / settings
         print("Coming soon...")
         continue
