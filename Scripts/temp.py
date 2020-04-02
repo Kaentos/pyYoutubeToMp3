@@ -14,6 +14,22 @@ import classes
 
 ## This file will replace main.py
 
+def updatePackages(packages):
+    for p in packages:
+        try:
+            subprocess.call(['pip', 'install', '-U', p])
+        except:
+            raise(f"Something went wrong updating: {p}. Please try again, if it keeps giving you this error report it to: https://github.com/Kaentos/pyYoutubeToMp3/issues")
+
+def checkOutDatedPackages():
+    outdated = subprocess.check_output(["pip", "list", "-o", "--format", "json"])
+    outdated = [package["name"] for package in json.loads(outdated)]
+    if outdated:
+        print("Outdated packages: ", outdated)
+        updatePackages(outdated)
+        print("Packages updated.")
+    else:
+        print("All packages are updated")
 
 def getOP():
     return input("Option: ")
@@ -101,6 +117,7 @@ with open("Data/alias.json", "r") as f:
 
 audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
 downloadOptions = classes.youtube_dlOptions()
+checkOutDatedPackages()
 
 while True: # Main loop
     print("1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
@@ -185,6 +202,7 @@ while True: # Main loop
     elif op == "2":
         openFileOrFolder("Downloads")
     elif op == "3": # menu 2 / settings
+        # Can clear downloads / remove all folders inside downloads
         print("Coming soon...")
         continue
     elif op in alias["back"]: # sair
