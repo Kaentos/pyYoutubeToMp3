@@ -116,6 +116,7 @@ with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
 audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
+video_formats = ["AVI", "MOV", "MP4", "WEBM", "WMV"]
 downloadOptions = classes.youtube_dlOptions()
 checkOutDatedPackages()
 
@@ -127,13 +128,19 @@ while True: # Main loop
             print("\n\n> File type:\n1) Audio\n2) Video\n0) Back")
             op = getOP()
             if op in alias["audio_type"]: # User choose audio type
-                print("\n\n> Audio format:\nThumbnail only available for MP3 and M4A formats.")
+                print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
                 print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) VORBIS\n7) WAV\n0) Back")
                 while True:
                     op = getOP().lower()
-                    if op not in audio_formats: # check if user inputed number
+                    if op in alias["back"]:
+                        break
+                    elif op.upper() not in audio_formats: # check if maybe the user inputed number
                         try:
-                            selected_format = audio_formats[int(op) - 1].lower()
+                            int_op = int(op)
+                            if int_op > 0:
+                                selected_format = audio_formats[int_op - 1].lower()
+                            else:
+                                raise IndexError
                         except (ValueError, IndexError): # handle not int or index out of bounds
                             print("Invalid audio format.")
                             continue
@@ -143,10 +150,25 @@ while True: # Main loop
                     break
             elif op in alias["video_type"]: # User choose video type
                 while True:
-                    print("Menu video")
+                    print("Video formats:")
+                    print("1) AVI\n2) MOV\n3) MP4\n4) WEBM\n5) WMV\n0) Back")
                     op = getOP()
-                    ## Set file ext/format in class
-                    break
+                    if op in alias["back"]:
+                        break
+                    elif op.upper() not in video_formats: # check if maybe the user inputed number
+                        try:
+                            int_op = int(op)
+                            if int_op > 0:
+                                selected_format = video_formats[int_op - 1].lower()
+                            else:
+                                raise IndexError
+                        except (ValueError, IndexError, ): # handle not int or index out of bounds
+                            print("Invalid video format.")
+                            continue
+                    else:
+                        selected_format = op
+                    downloadOptions.fileFormat = selected_format
+                    print(downloadOptions.fileFormat)
             elif op in alias["back"]: # Return to main menu
                 break
             else:
