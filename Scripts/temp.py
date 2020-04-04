@@ -75,9 +75,9 @@ def downloadOne(url, ytdl_options):
         ytdl.download([url])
 
 def downloadMultiple(urls, ytdl_options):
-    print(ytdl_options)
     for url in urls:
         print(url)
+        print(ytdl_options)
         with YoutubeDL(ytdl_options) as ytdl:
             ytdl.download([url])
 
@@ -118,16 +118,13 @@ def openFileOrFolder(name):
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
-# NÃO NECESSARIO
-audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "OGG", "WAV"]
-video_formats = ["MP4", "WEBM"]
-# NÃO NECESSARIO
-
 downloadOptions = classes.youtube_dlOptions()
 checkOutDatedPackages()
 
 has_file_type = False
 has_file_format = False
+did_download = False
+file_type = None
 file_formats = {
     "audio" : downloadOptions.audio_formats,
     "video" : downloadOptions.video_formats
@@ -135,48 +132,53 @@ file_formats = {
 
 def printFileFormats(file_type):
     if file_type == "audio":
-        print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
-        print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) OGG\n7) WAV\n0) Back")
+        print("\n\n> Audio formats:")
+        print("1) MP3\n2) M4A\n0) Back")
     elif file_type == "video":
-        print("Video formats:")
+        print("\n\nVideo formats:")
         print("1) MP4\n2) WEBM\n0) Back")
     else:
-        print("Error: I-FT")
-        exit()
+        raise ValueError("Error: I-FT, invalid file type")
 
 while True: # Main loop
-    print("1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
+    print("\n\n# Main Menu\n1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
     op = getOP()
     if op == "1": # Youtube Converter
         while True:
             if not has_file_type and not has_file_format:
                 print("\n\n> File type:\n1) Audio\n2) Video\n0) Back")
                 op = getOP().lower()
-                if op in alias["audio_type"] or op in alias["video_type"]:
+                if op in alias["audio_type"]:
                     has_file_type = True
+                    file_type = "audio"
+                elif op in alias["video_type"]:
+                    has_file_type = True
+                    file_type = "video"
                 elif op in alias["back"]:
                     break
                 else:
                     print("Invalid file type.")
                     continue
+
+                print("Do you want to add thumbnail to the file? (y/n)")
+                op = getOP().lower().replace(" ", "")
+                if op in ["1", "y", "yes"]:
+                    downloadOptions.addThumbnail = True
+                else:
+                    downloadOptions.addThumbnail = False
             
-            if has_file_type:
-                if op in alias["audio_type"]:
-                    printFileFormats("audio")
-                    selected_format = "audio"
-                elif op in alias["video_type"]:
-                    printFileFormats("video")
-                    selected_format = "video"
+            if has_file_type and not has_file_format:
+                printFileFormats(file_type)
                 op = getOP().lower()
 
                 if op in alias["back"]:
                     has_file_type = False
                     continue
-                if op.upper() not in file_formats[selected_format]:
+                if op.upper() not in file_formats[file_type]:
                     try:
                         int_op = int(op)
                         if int_op > 0:
-                            selected_format = file_formats[selected_format][int_op - 1].lower()
+                            selected_format = file_formats[file_type][int_op - 1].lower()
                             has_file_format = True
                         else:
                             raise IndexError
@@ -198,16 +200,18 @@ while True: # Main loop
                     if url:
                         downloadOne(url, downloadOptions.getOptions())
                         openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        did_download = True
                 elif op in alias[">1video"]:
                     downloadOptions.isPlaylist = False
                     while True:
                         openFileOrFolder("url_input.txt")
-                        print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
+                        print("\nDid you input all urls? (yes: continue, no: open file again, exit: quit)")
                         op = getOP()
                         if op in ["yes", "y"]:
                             urls = checkURLfromFile()
                             downloadMultiple(urls, downloadOptions.getOptions())
                             openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                            did_download = True
                             break
                         elif op not in ["no", "n"]:
                             continue
@@ -225,12 +229,16 @@ while True: # Main loop
                     has_file_format = False
                 else:
                     print("Invalid option!")
+                    did_download = False
 
-            if has_file_type and has_file_format: # if downloaded ask if user wants to quit
-                print("Do you wish to exit? (y/n)")
+            if did_download: # if downloaded ask if user wants to quit
+                print("\n\nDo you wish to exit? (y/n)")
                 op = getOP().replace(" ", "")
                 if op in ["1", "y", "yes"]:
                     exit()
+                else:
+                    has_file_format = False
+                    has_file_type = False
 
 
     elif op == "2": # open download folder
