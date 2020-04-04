@@ -162,13 +162,13 @@ while True: # Main loop
                                 selected_format = video_formats[int_op - 1].lower()
                             else:
                                 raise IndexError
-                        except (ValueError, IndexError, ): # handle not int or index out of bounds
+                        except (ValueError, IndexError): # handle not int or index out of bounds
                             print("Invalid video format.")
                             continue
                     else:
                         selected_format = op
                     downloadOptions.fileFormat = selected_format
-                    print(downloadOptions.fileFormat)
+                    break
             elif op in alias["back"]: # Return to main menu
                 break
             else:
@@ -177,7 +177,7 @@ while True: # Main loop
 
             # Get option (1 video, >1 videos, 1 playlist, >1 playlist)
             if op not in alias["back"]:
-                print("\n\n> What do you which to convert?\n1) Single video\n2) Multiple videos\n3) Single playlist\n4) Multiple playlists")
+                print("\n\n> What do you which to convert?\n1) Single video\n2) Multiple videos\n3) Single playlist\n4) Multiple playlists\n0) Back")
                 while True:
                     op = getOP()
                     if op in alias["1video"]:
@@ -211,8 +211,15 @@ while True: # Main loop
                         downloadOptions.isPlaylist = True
                         ## open text file
                         break
+                    elif op in alias["back"]:
+                        op = "1-1"
+                        break
+                    else:
+                        print("Invalid option!")
 
-            if op in alias["back"]:
+            if op in "1-1":
+                continue
+            elif op in alias["back"]:
                 break
             else: 
                 print("Do you wish to exit? (y/n)")
