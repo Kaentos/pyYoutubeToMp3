@@ -102,7 +102,10 @@ def checkURLfromFile():
 def openFileOrFolder(name):
     user_os = sys.platform
     path = os.path.join(pathlib.Path().absolute(), name)
-    print(path)
+    if not os.path.exists(path):
+        print("Missing Downloads folder. Creating a new one...")
+        os.mkdir(path)
+        print("Done.")
     if user_os == "win32":
         subprocess.call(["explorer", path])
     elif user_os == "linux":
@@ -228,7 +231,7 @@ while True: # Main loop
                     exit()
 
 
-    elif op == "2":
+    elif op == "2": # open download folder
         openFileOrFolder("Downloads")
     elif op == "3": # menu 2 / settings
         # Can clear downloads / remove all folders inside downloads
