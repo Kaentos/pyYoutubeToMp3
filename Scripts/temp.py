@@ -118,8 +118,8 @@ def openFileOrFolder(name):
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
-audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
-video_formats = ["AVI", "MOV", "MP4", "WEBM", "WMV"]
+audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "OGG", "WAV"] # if hasn't ffmpeg is only [M4A, WEBM]
+video_formats = ["MP4", "WEBM"]
 downloadOptions = classes.youtube_dlOptions()
 checkOutDatedPackages()
 
@@ -132,7 +132,7 @@ while True: # Main loop
             op = getOP()
             if op in alias["audio_type"]: # User choose audio type
                 print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
-                print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) VORBIS\n7) WAV\n0) Back")
+                print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) OGG\n7) WAV\n0) Back")
                 while True:
                     op = getOP().lower()
                     if op in alias["back"]:
@@ -154,7 +154,7 @@ while True: # Main loop
             elif op in alias["video_type"]: # User choose video type
                 while True:
                     print("Video formats:")
-                    print("1) AVI\n2) MOV\n3) MP4\n4) WEBM\n5) WMV\n0) Back")
+                    print("1) MP4\n2) WEBM\n0) Back")
                     op = getOP()
                     if op in alias["back"]:
                         break
