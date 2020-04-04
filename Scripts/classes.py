@@ -21,7 +21,9 @@ class youtube_dlOptions:
                 "format": "bestvideo[height<=2160]+bestaudio/best[height<=2160]",
                 "videoformat" : self.fileFormat,
                 "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s.%(ext)s",
-                "noplaylist": not self.isPlaylist
+                "noplaylist": not self.isPlaylist,
+                "writethumbnail" : True,
+                "postprocessors" : [{"key" : "EmbedThumbnail"}]
             }
 
         #if self.fileFormat in "mp3":

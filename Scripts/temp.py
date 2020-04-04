@@ -118,116 +118,118 @@ def openFileOrFolder(name):
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
-audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "OGG", "WAV"] # if hasn't ffmpeg is only [M4A, WEBM]
+# NÃO NECESSARIO
+audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "OGG", "WAV"]
 video_formats = ["MP4", "WEBM"]
+# NÃO NECESSARIO
+
 downloadOptions = classes.youtube_dlOptions()
 checkOutDatedPackages()
+
+has_file_type = False
+has_file_format = False
+file_formats = {
+    "audio" : downloadOptions.audio_formats,
+    "video" : downloadOptions.video_formats
+}
+
+def printFileFormats(file_type):
+    if file_type == "audio":
+        print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
+        print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) OGG\n7) WAV\n0) Back")
+    elif file_type == "video":
+        print("Video formats:")
+        print("1) MP4\n2) WEBM\n0) Back")
+    else:
+        print("Error: I-FT")
+        exit()
 
 while True: # Main loop
     print("1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
     op = getOP()
     if op == "1": # Youtube Converter
-        while op not in alias["back"]: # get file type (audio or video)
-            print("\n\n> File type:\n1) Audio\n2) Video\n0) Back")
-            op = getOP()
-            if op in alias["audio_type"]: # User choose audio type
-                print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
-                print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) OGG\n7) WAV\n0) Back")
-                while True:
-                    op = getOP().lower()
-                    if op in alias["back"]:
-                        break
-                    elif op.upper() not in audio_formats: # check if maybe the user inputed number
-                        try:
-                            int_op = int(op)
-                            if int_op > 0:
-                                selected_format = audio_formats[int_op - 1].lower()
-                            else:
-                                raise IndexError
-                        except (ValueError, IndexError): # handle not int or index out of bounds
-                            print("Invalid audio format.")
-                            continue
-                    else:
-                        selected_format = op
-                    downloadOptions.fileFormat = selected_format
+        while True:
+            if not has_file_type and not has_file_format:
+                print("\n\n> File type:\n1) Audio\n2) Video\n0) Back")
+                op = getOP().lower()
+                if op in alias["audio_type"] or op in alias["video_type"]:
+                    has_file_type = True
+                elif op in alias["back"]:
                     break
-            elif op in alias["video_type"]: # User choose video type
-                while True:
-                    print("Video formats:")
-                    print("1) MP4\n2) WEBM\n0) Back")
-                    op = getOP()
-                    if op in alias["back"]:
-                        break
-                    elif op.upper() not in video_formats: # check if maybe the user inputed number
-                        try:
-                            int_op = int(op)
-                            if int_op > 0:
-                                selected_format = video_formats[int_op - 1].lower()
-                            else:
-                                raise IndexError
-                        except (ValueError, IndexError): # handle not int or index out of bounds
-                            print("Invalid video format.")
-                            continue
-                    else:
-                        selected_format = op
-                    downloadOptions.fileFormat = selected_format
-                    break
-            elif op in alias["back"]: # Return to main menu
-                break
-            else:
-                print("Invalid file type.")
-                continue
+                else:
+                    print("Invalid file type.")
+                    continue
+            
+            if has_file_type:
+                if op in alias["audio_type"]:
+                    printFileFormats("audio")
+                    selected_format = "audio"
+                elif op in alias["video_type"]:
+                    printFileFormats("video")
+                    selected_format = "video"
+                op = getOP().lower()
 
-            # Get option (1 video, >1 videos, 1 playlist, >1 playlist)
-            if op not in alias["back"]:
+                if op in alias["back"]:
+                    has_file_type = False
+                    continue
+                if op.upper() not in file_formats[selected_format]:
+                    try:
+                        int_op = int(op)
+                        if int_op > 0:
+                            selected_format = file_formats[selected_format][int_op - 1].lower()
+                            has_file_format = True
+                        else:
+                            raise IndexError
+                    except (ValueError, IndexError): # handle not int or index out of bounds
+                        print("Invalid audio format.")
+                        continue
+                else:
+                    selected_format = op
+                    has_file_format = True
+            print(selected_format)
+            
+            if has_file_format:
+                downloadOptions.fileFormat = selected_format
                 print("\n\n> What do you which to convert?\n1) Single video\n2) Multiple videos\n3) Single playlist\n4) Multiple playlists\n0) Back")
-                while True:
-                    op = getOP()
-                    if op in alias["1video"]:
-                        downloadOptions.isPlaylist = False
-                        url = getVideoURL(alias)
-                        if url:
-                            downloadOne(url, downloadOptions.getOptions())
+                op = getOP()
+                if op in alias["1video"]:
+                    downloadOptions.isPlaylist = False
+                    url = getVideoURL(alias)
+                    if url:
+                        downloadOne(url, downloadOptions.getOptions())
+                        openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                elif op in alias[">1video"]:
+                    downloadOptions.isPlaylist = False
+                    while True:
+                        openFileOrFolder("url_input.txt")
+                        print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
+                        op = getOP()
+                        if op in ["yes", "y"]:
+                            urls = checkURLfromFile()
+                            downloadMultiple(urls, downloadOptions.getOptions())
                             openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
-                        break
-                    elif op in alias[">1video"]:
-                        downloadOptions.isPlaylist = False
-                        while True:
-                            openFileOrFolder("url_input.txt")
-                            print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
-                            op = getOP()
-                            if op in ["yes", "y"]:
-                                urls = checkURLfromFile()
-                                downloadMultiple(urls, downloadOptions.getOptions())
-                                openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
-                                break
-                            elif op not in ["no", "n"]:
-                                break
-                        break
-                    elif op in alias["1playlist"]:
-                        downloadOptions.isPlaylist = True
-                        url = getPlaylistURL(alias)
-                        if url:
-                            pass #download
-                        break
-                    elif op in alias[">1playlist"]:
-                        downloadOptions.isPlaylist = True
-                        ## open text file
-                        break
-                    elif op in alias["back"]:
-                        op = "1-1"
-                        break
-                    else:
-                        print("Invalid option!")
+                            break
+                        elif op not in ["no", "n"]:
+                            continue
+                elif op in alias["1playlist"]:
+                    downloadOptions.isPlaylist = True
+                    url = getPlaylistURL(alias)
+                    if url:
+                        pass #download
+                    break
+                elif op in alias[">1playlist"]:
+                    downloadOptions.isPlaylist = True
+                    ## open text file
+                    break
+                elif op in alias["back"]:
+                    has_file_format = False
+                else:
+                    print("Invalid option!")
 
-            if op in "1-1":
-                continue
-            elif op in alias["back"]:
-                break
-            else: 
+            if has_file_type and has_file_format: # if downloaded ask if user wants to quit
                 print("Do you wish to exit? (y/n)")
                 op = getOP().replace(" ", "")
-                if op in ["y", "yes", alias["back"]]:
+                if op in ["1", "y", "yes"]:
                     exit()
 
 

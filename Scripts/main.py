@@ -1,237 +1,151 @@
-from youtube_dl import YoutubeDL
-import requests
-from configparser import ConfigParser
-import os
-import checkFunctions
-import resetFunctions
+op2, op3 = "-1", "-1"
 
-class DownloadOptions:
-    def __init__(self):
-        self.fileType = None
-        self.isPlaylist = None
-        self.fileFormat = None
+while True: # main loop
+    op = input("MAIN: 1,2,0\nINPUT: ")
+    if op == "1": # converter
+        while True:
 
-    def ytdl_options(self):
-        options = {
-            "format": "bestaudio/best",
-            "outtmpl": "Mp3/%(title)s.%(ext)s",
-            "noplaylist": self.isPlaylist,
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": self.fileFormat,
-                    "preferredquality": "192",
-                },
-                {
-                    'key': 'FFmpegMetadata'
-                },
-            ]
-        }
-        if self.fileFormat in "mp3":
-            options["writethumbnail"] = True
-            options["postprocessors"].append({ "key" : "EmbedThumbnail" })
-        return options
+            if op2 == "-1" and op3 == "-1": # buscar tipo
+                op = input("TIPO: 1,2,0\nINPUT: ")
+                if op == "1": # audio
+                    op2 = "1"                
 
-def getOP():
-    return input("Option: ").lower()
+                if op == "2": # video
+                    op2 = "2"
 
-def goBack(op):
-    if op == 0 or "back" in op or op[0] == "b":
-        return True
-    else:
-        return False
-    
-############################
-#          Prints          #
-############################
-def printTitle(title):
-    print(f"\n\n\n> {title} <")
-
-def printSubTitle(title):
-    print(f"\n# {title}")
-
-def printBack():
-    print("0) Back")
-
-def printConvertType():
-    printSubTitle("Convert to?")
-    print("1) Audio")
-    print("2) Video")
-    printBack()
-    return input("Option: ")
-
-def getAudioFormat():
-    while(True):
-        audio_formats = ["MP3", "AAC", "FLAC", "M4A", "OPUS", "VORBIS", "WAV"]
-        printSubTitle("Availabe audio formats:")
-        for i, text in enumerate(audio_formats):
-            print(f"{i+1}) {text}")
-        printBack()
-        op = getOP().upper()
-        try:
-            if op in audio_formats:
-                return op.lower()
-            elif int(op) in range(1, len(audio_formats) + 1):
-                return audio_formats[int(op) - 1].lower()
-            elif int(op) == 0 or op.lower() in ["back", "b"]:
-                return False
-            else:
-                print("Not a valid format.\n")
-        except ValueError:
-            pass
-
-
-def printVideoFormats():
-    return "None"
-
-def printInvalidOption(invalidType):
-    print(f"The {invalidType} you chose is invalid!")
-############################
-#        End Prints        #
-############################
-
-def getURL():
-    while True:
-        link = checkURL(input("Youtube video URL or Code: "))
-        if link == -1:
-            return -1
-        elif link:
-            return link
+                elif op == "0": # sair para anterior - main
+                    break
             
+            if op2 in ["1", "2"]: # buscar formato
+                op = input("Formato: 1,2,0\nINPUT: ")
+                if op == "1": # f1
+                    op3 = "1"                
 
-def checkURL(link):
-    if "www.youtube.com/watch?v=" in link or len(link) == 11:
-        return link
-    elif link == -1 or link in ["back", "b"]:
-        return -1
+                if op == "2": # f2
+                    op3 = "2"
+                elif op == "0": # sair para anterior - buscar tipo
+                    op2 = "-1"
+
+            if op3 in ["1", "2"]: # buscar conteudo
+                op = input("Conteudo: 1,2,0\nINPUT: ")
+                if op == "1": # c1
+                    op4 = "1"                
+
+                if op == "2": # c2
+                    op4 = "2"
+
+                elif op == "0": # sair para anterior - formato
+                    op3 = "-1"
+
+            
+        
     else:
-        print("Invalid URL or Code, url must contain www.youtube.com/watch?v=<code> and code must be 11 characters long.")
-        return False
-
-def downloadVideo(yt_options, url): # Download video from youtube
-    with YoutubeDL(yt_options) as ytdl:
-        ytdl.download([url])
-
-
-if __name__ == "__main__":
-    Info = ConfigParser()
-    Info.read("Data/info.ini")
-    
-    video_formats = ["AVI", "MOV", "MP4", "WEBM", "WMV"]
-    ytOptions = ["Single Video", "Multiples Videos", "Single Playlist", "Multiples Playlists"]
-    ytAlias = [
-        ["1", "single video", "singlevideo", "1 video", "1video", "single v", "singlev", "s video", "svideo", "video", "s v", "sv", "1 v", "1v", "v"],
-        ["2", "multiple videos", "multiplevideos", "m videos", "mvideos", "multiple v", "multiplev", "m v", "mv", "vs"],
-        ["3", "single playlist", "singleplaylist", "1 playlist", "1playlist", "playlist", "play", "list", "sp", "s p"],
-        ["4", "multiple playlists", "multipleplaylists", "playlists", "lists", "plays", "mp", "m p"]
-    ]
-    DownOptions = DownloadOptions()
-    print("Welcome to <projectname>!")
-    print("What do you wish to do?")
-    print("1) Youtube downloader")
-    print("2) Local converter")
-    print("0) Exit")
-    op = getOP()
-
-    if op == "1" or any(alias in op for alias in ["youtube", "yt"]):
-        DownOptions.fileType = "video"
-        print("\n\n\n> Youtube <")
-        for i, text in enumerate(ytOptions):
-            print(f"{i+1}) {text}")
-        printBack()
-        getOP()
-        if any(alias in op for alias in ytAlias[0]): # single video
-            DownOptions.isPlaylist = False
-            printTitle(ytOptions[0])
-            while True:
-                convertType = printConvertType()
-                if convertType == "1": # audio
-                    DownOptions.fileFormat = getAudioFormat()
-                    if not DownOptions.fileFormat: # Wants to go back
-                        print("<-- back\n")
-                        break
-                    else:
-                        downloadVideo(DownOptions.ytdl_options(), getURL())
-                        
-                        #print(DownOptions.fileFormat)
-                        #print(DownOptions.ytdl_options())
-                    break
-                elif convertType == "2": # video
-                    printVideoFormats()
-                    break
-                elif goBack(convertType):
-                    break
-                else:
-                    printInvalidOption("convert type")
-                
-
-        elif any(alias in op for alias in ytAlias[1]): # multiple videos
-            DownOptions.isPlaylist = False
-            printTitle(ytOptions[1])
-            printConvertType()
-
-        elif any(alias in op for alias in ytAlias[2]): # single playlist
-            DownOptions.isPlaylist = True
-            printTitle(ytOptions[2])
-            printConvertType()
-
-        elif any(alias in op for alias in ytAlias[3]): # multiple playlists
-            DownOptions.isPlaylist = True
-            printTitle(ytOptions[3])
-            printConvertType()
-
-
-
-
-
-
-
-
-
-
-
-
-    exit()
-    checkFunctions.checkURLFile()
-    checkFunctions.checkMp3()
-
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "outtmpl": "Mp3/%(title)s.%(ext)s",
-        "noplaylist": True,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
-            },
-            {
-                'key': 'FFmpegMetadata'
-            },
-        ]
-    }
-
-    basicURL = "https://www.youtube.com/watch?v="
-    validURLs = []
-    with open("musicURLs.txt", "r") as file:
-        URLs = file.readlines()
-        if len(URLs) > 0:
-            for url in URLs:
-                url = url.strip("\n")
-                if basicURL in url:
-                    if requests.get(f"{Info['yt']['checkLink']}{url}").status_code == 200:
-                        validURLs.append(url)
-        else:
-            print("There are no URLs in musicURLs.txt.")
-            exit()
-    if validURLs:
-        print(f"URLs to download: {validURLs}")
-        with YoutubeDL(ydl_opts) as ydl:
-            for url in validURLs:
-                ydl.download([url])
-        print("Download completed, check Mp3/.")
-    else:
-        print("There are no videos to convert, did you input some in musicURLs.txt? Did you input them correctly?")
         exit()
 
-    resetFunctions.resetFile()
+
+
+while op not in alias["back"]: # get file type (audio or video)
+            print("\n\n> File type:\n1) Audio\n2) Video\n0) Back")
+            op = getOP()
+            if op in alias["audio_type"]: # User choose audio type
+                print("\n\n> Audio formats:\nThumbnail only available for MP3 and M4A formats.")
+                print("1) MP3\n2) AAC\n3) FLAC\n4) M4A\n5) OPUS\n6) OGG\n7) WAV\n0) Back")
+                while True:
+                    op = getOP().lower()
+                    if op in alias["back"]:
+                        break
+                    elif op.upper() not in audio_formats: # check if maybe the user inputed number
+                        try:
+                            int_op = int(op)
+                            if int_op > 0:
+                                selected_format = audio_formats[int_op - 1].lower()
+                            else:
+                                raise IndexError
+                        except (ValueError, IndexError): # handle not int or index out of bounds
+                            print("Invalid audio format.")
+                            continue
+                    else:
+                        selected_format = op
+                    downloadOptions.fileFormat = selected_format
+                    break
+            elif op in alias["video_type"]: # User choose video type
+                while True:
+                    print("Video formats:")
+                    print("1) MP4\n2) WEBM\n0) Back")
+                    op = getOP()
+                    if op in alias["back"]:
+                        op = "1-1"
+                        break
+                    elif op.upper() not in video_formats: # check if maybe the user inputed number
+                        try:
+                            int_op = int(op)
+                            if int_op > 0:
+                                selected_format = video_formats[int_op - 1].lower()
+                            else:
+                                raise IndexError
+                        except (ValueError, IndexError): # handle not int or index out of bounds
+                            print("Invalid video format.")
+                            continue
+                    else:
+                        selected_format = op
+                    downloadOptions.fileFormat = selected_format
+                    break
+            elif op in alias["back"]: # Return to main menu
+                break
+            else:
+                print("Invalid file type.")
+                continue
+            
+            if op == "1-1":
+                continue
+
+            # Get option (1 video, >1 videos, 1 playlist, >1 playlist)
+            if op not in alias["back"]:
+                print("\n\n> What do you which to convert?\n1) Single video\n2) Multiple videos\n3) Single playlist\n4) Multiple playlists\n0) Back")
+                while True:
+                    op = getOP()
+                    if op in alias["1video"]:
+                        downloadOptions.isPlaylist = False
+                        url = getVideoURL(alias)
+                        if url:
+                            downloadOne(url, downloadOptions.getOptions())
+                            openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        break
+                    elif op in alias[">1video"]:
+                        downloadOptions.isPlaylist = False
+                        while True:
+                            openFileOrFolder("url_input.txt")
+                            print("Did you input all urls? (yes: continue, no: open file again, exit: quit)")
+                            op = getOP()
+                            if op in ["yes", "y"]:
+                                urls = checkURLfromFile()
+                                downloadMultiple(urls, downloadOptions.getOptions())
+                                openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                                break
+                            elif op not in ["no", "n"]:
+                                break
+                        break
+                    elif op in alias["1playlist"]:
+                        downloadOptions.isPlaylist = True
+                        url = getPlaylistURL(alias)
+                        if url:
+                            pass #download
+                        break
+                    elif op in alias[">1playlist"]:
+                        downloadOptions.isPlaylist = True
+                        ## open text file
+                        break
+                    elif op in alias["back"]:
+                        op = "1-1"
+                        break
+                    else:
+                        print("Invalid option!")
+            if op in "1-1":
+                continue
+            elif op in alias["back"]:
+                break
+            else: 
+                print("Do you wish to exit? (y/n)")
+                op = getOP().replace(" ", "")
+                if op in ["y", "yes", alias["back"]]:
+                    exit()
