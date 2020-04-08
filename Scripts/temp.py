@@ -1,125 +1,79 @@
-import requests
 import os
 import subprocess
-import sys
-import pathlib
 from youtube_dl import YoutubeDL
 from datetime import datetime
 import json
+import configparser
 
 ## Local files
 import classes
+import checkFunctions
 ## End local files
 
+local_data = configparser.ConfigParser()
+local_data.read("Data/info.ini")
 
-## This file will replace main.py
-
-def updatePackages(packages):
-    for p in packages:
-        try:
-            subprocess.call(['pip', 'install', '-U', p])
-        except:
-            raise(f"Something went wrong updating: {p}. Please try again, if it keeps giving you this error report it to: https://github.com/Kaentos/pyYoutubeToMp3/issues")
-
-def checkOutDatedPackages():
-    outdated = subprocess.check_output(["pip", "list", "-o", "--format", "json"])
-    outdated = [package["name"] for package in json.loads(outdated)]
-    if outdated:
-        print("Outdated packages: ", outdated)
-        updatePackages(outdated)
-        print("Packages updated.")
-    else:
-        print("All packages are updated")
+user_os = checkFunctions.checkUserOS(local_data["repo"]["issueLink"])
+checkFunctions.checkOutDatedPackages(local_data["repo"]["issueLink"])
 
 def getOP():
     return input("Option: ")
 
 def getVideoURL(alias):
-    print("URL must at least contain www.youtube.com/watch?v= / ID must be 11 characters long.")
+    print("URL must at least contain www.youtube.com/watch?v=<video_id> / ID must be 11 characters long.")
     while True:
         url = input("URL/ID: ")
         if "www.youtube.com/watch?v=" in url:
-            if checkURL(url):
+            if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif len(url) == 11: # 11 = length of video id
-            url = f"www.youtube.com/watch?v={url}"
-            if checkURL(url):
+            url = f"https://www.youtube.com/watch?v={url}"
+            if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif url in alias["back"]:
             return None
 
 def getPlaylistURL(alias):
-    print("URL must contain www.youtube.com/playlist?list= or www.youtube.com/watch?=<id>&list= / ID must be 34 characters long.")
+    print("URL must contain www.youtube.com/playlist?list=<playlist_id> or www.youtube.com/watch?=<video_id>&list=<playlist_id> / ID must be 34 characters long.")
     while True:
         url = input("URL/ID: ")
         if "www.youtube.com/playlist?list=" in url or "&?list=" in url:
-            if checkURL(url):
+            if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif len(url) == 34:
-            url = f"https://www.youtube.com/oembed?format=json&url=www.youtube.com/playlist?list={url}"
-            if checkURL(url):
+            url = f"{local_data['yt']['checkLink']}www.youtube.com/playlist?list={url}"
+            if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif url in alias["back"]:
             return None
 
-def checkURL(url):
-    if requests.get(f"https://www.youtube.com/oembed?format=json&url={url}").status_code == 200:
-        return True
-    else:
-        return False
-
 def downloadOne(url, ytdl_options):
-    print(ytdl_options)
-    print(url)
     with YoutubeDL(ytdl_options) as ytdl:
         ytdl.download([url])
 
 def downloadMultiple(urls, ytdl_options):
     for url in urls:
-        print(url)
-        print(ytdl_options)
         with YoutubeDL(ytdl_options) as ytdl:
             ytdl.download([url])
 
-def checkURLfromFile():
-    with open("url_input.txt", "r") as f:
-        fContent = f.readlines()
-    
-    valid_urls = []
-    print("Validating urls...", end=" ")
-    for url in fContent:
-        url = url.strip("\n")
-        if checkURL(url):
-            valid_urls.append(url)
-    print("OK.")
-
-    print("Removing duplicated urls...", end=" ")
-    valid_urls = set(valid_urls)
-    print("OK.")
-    print(f"Valid urls: {valid_urls}")
-    return valid_urls
-
-def openFileOrFolder(name):
-    user_os = sys.platform
-    path = os.path.join(pathlib.Path().absolute(), name)
-    if not os.path.exists(path):
-        print("Missing Downloads folder. Creating a new one...")
-        os.mkdir(path)
-        print("Done.")
-    if user_os == "win32":
-        subprocess.call(["explorer", path])
-    elif user_os == "linux":
-        subprocess.call(["xdg-open", path])
-    elif user_os == "darwin":
-        subprocess.call(["open", path])
+def openFolder(name):
+    path = checkFunctions.checkIfFolderExists(name)
+    if path:
+        subprocess.call([user_os[1], path])
     else:
-        raise OSError("Your platform isn't supported, please open an issue.")
+        raise BaseException(f"The folder you trying to open has an error please open an issue at: {local_data['repo']['issueLink']}")
+
+def openFile(name):
+    path = checkFunctions.checkIfFileExists(name)
+    if path:
+        subprocess.call([user_os[1], path])
+    else:
+        raise BaseException(f"The file you trying to open has an error please open an issue at: {local_data['repo']['issueLink']}")
 
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
 downloadOptions = classes.youtube_dlOptions()
-checkOutDatedPackages()
 
 has_file_type = False
 has_file_format = False
@@ -160,7 +114,7 @@ while True: # Main loop
                     print("Invalid file type.")
                     continue
 
-                print("Do you want to add thumbnail to the file? (y/n)")
+                print("Do you want to add thumbnail? (y/n)")
                 op = getOP().lower().replace(" ", "")
                 if op in ["1", "y", "yes"]:
                     downloadOptions.addThumbnail = True
@@ -188,7 +142,6 @@ while True: # Main loop
                 else:
                     selected_format = op
                     has_file_format = True
-            print(selected_format)
             
             if has_file_format:
                 downloadOptions.fileFormat = selected_format
@@ -199,18 +152,18 @@ while True: # Main loop
                     url = getVideoURL(alias)
                     if url:
                         downloadOne(url, downloadOptions.getOptions())
-                        openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        openFolder(os.path.join("Downloads", downloadOptions.folderName))
                         did_download = True
                 elif op in alias[">1video"]:
                     downloadOptions.isPlaylist = False
                     while True:
-                        openFileOrFolder("url_input.txt")
+                        openFile("url_input.txt")
                         print("\nDid you input all urls? (yes: continue, no: open file again, exit: quit)")
                         op = getOP()
                         if op in ["yes", "y"]:
-                            urls = checkURLfromFile()
+                            urls = checkFunctions.checkURLfromFile(local_data["yt"]["checkLink"])
                             downloadMultiple(urls, downloadOptions.getOptions())
-                            openFileOrFolder(os.path.join("Downloads", downloadOptions.folderName))
+                            openFolder(os.path.join("Downloads", downloadOptions.folderName))
                             did_download = True
                             break
                         elif op not in ["no", "n"]:
@@ -242,7 +195,7 @@ while True: # Main loop
 
 
     elif op == "2": # open download folder
-        openFileOrFolder("Downloads")
+        openFolder("Downloads")
     elif op == "3": # menu 2 / settings
         # Can clear downloads / remove all folders inside downloads
         print("Coming soon...")
