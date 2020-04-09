@@ -47,6 +47,23 @@ def getPlaylistURL(alias):
         elif url in alias["back"]:
             return None
 
+def downloadFromFile(alias, did_download, checkLink):
+    while True:
+        openFile("url_input.txt")
+        print("\nDid you input all urls? (yes: continue, no: open file again, back: back)")
+        op = getOP()
+        if op in ["yes", "y"]:
+            urls = checkFunctions.checkURLfromFile(checkLink)
+            downloadMultiple(urls, downloadOptions.getOptions())
+            openFolder(os.path.join("Downloads", downloadOptions.folderName))
+            did_download = True
+            return did_download
+        elif op in alias["back"]:
+            did_download = False
+            return did_download
+        elif op not in ["no", "n"]:
+            continue
+
 def downloadOne(url, ytdl_options):
     with YoutubeDL(ytdl_options) as ytdl:
         ytdl.download([url])
@@ -114,7 +131,7 @@ while True: # Main loop
                     print("Invalid file type.")
                     continue
 
-                print("Do you want to add thumbnail? (y/n)")
+                print("\n\nDo you want to add thumbnail? (y/n)")
                 op = getOP().lower().replace(" ", "")
                 if op in ["1", "y", "yes"]:
                     downloadOptions.addThumbnail = True
@@ -156,18 +173,7 @@ while True: # Main loop
                         did_download = True
                 elif op in alias[">1video"]:
                     downloadOptions.isPlaylist = False
-                    while True:
-                        openFile("url_input.txt")
-                        print("\nDid you input all urls? (yes: continue, no: open file again, exit: quit)")
-                        op = getOP()
-                        if op in ["yes", "y"]:
-                            urls = checkFunctions.checkURLfromFile(local_data["yt"]["checkLink"])
-                            downloadMultiple(urls, downloadOptions.getOptions())
-                            openFolder(os.path.join("Downloads", downloadOptions.folderName))
-                            did_download = True
-                            break
-                        elif op not in ["no", "n"]:
-                            continue
+                    did_download = downloadFromFile(alias, did_download, local_data["yt"]["checkLink"])
                 elif op in alias["1playlist"]:
                     downloadOptions.isPlaylist = True
                     url = getPlaylistURL(alias)
@@ -177,18 +183,7 @@ while True: # Main loop
                         did_download = True
                 elif op in alias[">1playlist"]:
                     downloadOptions.isPlaylist = True
-                    while True:
-                        openFile("url_input.txt")
-                        print("\nDid you input all urls? (yes: continue, no: open file again, exit: quit)")
-                        op = getOP()
-                        if op in ["yes", "y"]:
-                            urls = checkFunctions.checkURLfromFile(local_data["yt"]["checkLink"])
-                            downloadMultiple(urls, downloadOptions.getOptions())
-                            openFolder(os.path.join("Downloads", downloadOptions.folderName))
-                            did_download = True
-                            break
-                        elif op not in ["no", "n"]:
-                            continue
+                    did_download = downloadFromFile(alias, did_download, local_data["yt"]["checkLink"])
                 elif op in alias["back"]:
                     has_file_format = False
                 else:
