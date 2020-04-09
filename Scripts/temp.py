@@ -50,6 +50,7 @@ def getPlaylistURL(alias):
 def downloadFromFile(alias, did_download, checkLink):
     while True:
         openFile("url_input.txt")
+        print("\nPlease make sure you have one line with only one link (one line for each link, use break / enter)")
         print("\nDid you input all urls? (yes: continue, no: open file again, back: back)")
         op = getOP()
         if op in ["yes", "y"]:
@@ -96,6 +97,7 @@ def printFileFormats(file_type):
         print("1) MP4\n2) WEBM\n0) Back")
     else:
         raise ValueError("Error: I-FT, invalid file type")
+    
 
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
@@ -137,6 +139,7 @@ while True: # Main loop
                     downloadOptions.addThumbnail = True
                 else:
                     downloadOptions.addThumbnail = False
+                print(f"Add thumbnail: {downloadOptions.addThumbnail}")
             
             if has_file_type and not has_file_format:
                 printFileFormats(file_type)
@@ -198,6 +201,7 @@ while True: # Main loop
                 else:
                     has_file_format = False
                     has_file_type = False
+                    did_download = False
 
 
     elif op == "2": # open download folder

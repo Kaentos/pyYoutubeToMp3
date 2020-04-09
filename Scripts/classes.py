@@ -17,9 +17,6 @@ class youtube_dlOptions:
                 "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s." + self.fileFormat,
                 "noplaylist": not self.isPlaylist
             }
-            if self.addThumbnail:
-                options["writethumbnail"] = self.addThumbnail
-                options["postprocessors"] = [{ "key" : "EmbedThumbnail" }]
         elif self.fileFormat.upper() in self.video_formats:
             options = {
                 "format": "bestvideo[height<=2160]+bestaudio[ext=m4a]" if self.addThumbnail else "bestvideo[height<=2160]+bestaudio",
@@ -27,8 +24,9 @@ class youtube_dlOptions:
                 "outtmpl": f"Downloads/{self.folderName}" + "/%(title)s.%(ext)s",
                 "noplaylist": not self.isPlaylist
             }
-            if self.addThumbnail:
+
+        if self.addThumbnail:
                 options["writethumbnail"] = self.addThumbnail
-                options["postprocessors"] = [{"key" : "EmbedThumbnail"}]
+                options["postprocessors"] = [{ "key" : "EmbedThumbnail" }]
         # can add [filesize<XXM] to limit the maximum size of file 
         return options
