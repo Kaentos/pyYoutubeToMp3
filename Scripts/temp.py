@@ -70,6 +70,16 @@ def openFile(name):
     else:
         raise BaseException(f"The file you trying to open has an error please open an issue at: {local_data['repo']['issueLink']}")
 
+def printFileFormats(file_type):
+    if file_type == "audio":
+        print("\n\n> Audio formats:")
+        print("1) MP3\n2) M4A\n0) Back")
+    elif file_type == "video":
+        print("\n\nVideo formats:")
+        print("1) MP4\n2) WEBM\n0) Back")
+    else:
+        raise ValueError("Error: I-FT, invalid file type")
+
 with open("Data/alias.json", "r") as f:
     alias = json.load(f)
 
@@ -83,16 +93,6 @@ file_formats = {
     "audio" : downloadOptions.audio_formats,
     "video" : downloadOptions.video_formats
 }
-
-def printFileFormats(file_type):
-    if file_type == "audio":
-        print("\n\n> Audio formats:")
-        print("1) MP3\n2) M4A\n0) Back")
-    elif file_type == "video":
-        print("\n\nVideo formats:")
-        print("1) MP4\n2) WEBM\n0) Back")
-    else:
-        raise ValueError("Error: I-FT, invalid file type")
 
 while True: # Main loop
     print("\n\n# Main Menu\n1) Start converting\n2) Open Download folder\n3) Settings / Options\n0) Exit")
@@ -172,16 +172,27 @@ while True: # Main loop
                     downloadOptions.isPlaylist = True
                     url = getPlaylistURL(alias)
                     if url:
-                        pass #download
-                    break
+                        downloadOne(url, downloadOptions.getOptions())
+                        openFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        did_download = True
                 elif op in alias[">1playlist"]:
                     downloadOptions.isPlaylist = True
-                    ## open text file
-                    break
+                    while True:
+                        openFile("url_input.txt")
+                        print("\nDid you input all urls? (yes: continue, no: open file again, exit: quit)")
+                        op = getOP()
+                        if op in ["yes", "y"]:
+                            urls = checkFunctions.checkURLfromFile(local_data["yt"]["checkLink"])
+                            downloadMultiple(urls, downloadOptions.getOptions())
+                            openFolder(os.path.join("Downloads", downloadOptions.folderName))
+                            did_download = True
+                            break
+                        elif op not in ["no", "n"]:
+                            continue
                 elif op in alias["back"]:
                     has_file_format = False
                 else:
-                    print("Invalid option!")
+                    print("Invalid option.")
                     did_download = False
 
             if did_download: # if downloaded ask if user wants to quit
@@ -196,11 +207,11 @@ while True: # Main loop
 
     elif op == "2": # open download folder
         openFolder("Downloads")
-    elif op == "3": # menu 2 / settings
+    elif op == "3": # settings
         # Can clear downloads / remove all folders inside downloads
         print("Coming soon...")
         continue
-    elif op in alias["back"]: # sair
+    elif op in alias["back"]: # exit
         exit()
     else:
-        print("OP inválida")
+        print("Invalid option.")
