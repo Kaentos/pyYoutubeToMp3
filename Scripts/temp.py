@@ -37,11 +37,11 @@ def getPlaylistURL(alias):
     print("URL must contain www.youtube.com/playlist?list=<playlist_id> or www.youtube.com/watch?=<video_id>&list=<playlist_id> / ID must be 34 characters long.")
     while True:
         url = input("URL/ID: ")
-        if "www.youtube.com/playlist?list=" in url or "&?list=" in url:
+        if "www.youtube.com/playlist?list=" in url or "&list=" in url:
             if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif len(url) == 34:
-            url = f"{local_data['yt']['checkLink']}www.youtube.com/playlist?list={url}"
+            url = f"www.youtube.com/playlist?list={url}"
             if checkFunctions.checkURL(url, local_data["yt"]["checkLink"]):
                 return url
         elif url in alias["back"]:
