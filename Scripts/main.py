@@ -6,8 +6,8 @@ import json
 import configparser
 
 ## Local files
-import classes
-import checkFunctions
+from local_package import checkFunctions
+from local_package import classes
 ## End local files
 
 local_data = configparser.ConfigParser()

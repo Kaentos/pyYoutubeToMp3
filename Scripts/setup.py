@@ -1,51 +1,70 @@
-from configparser import ConfigParser
-import requests
-import zipfile
-import os
-import shutil
+print("Starting setup...")
+print("Importing packages...", end=" ")
+try:
+    import sys
+    import configparser
+    import os
+    import zipfile
+    from local_package import checkFunctions
+except ImportError:
+    print("ERROR!\n\nPlease make sure you have installed all the packages referenced in requirements.txt into the venv and you have all the scripts in Scripts/.")
+    print("If you don't have files please download from: https://github.com/Kaentos/pyYoutubeToMp3")
+    raise
+except BaseException:
+    print("Error 1: check Data/errorList.txt.")
+    raise
+print("OK!")
 
-# Rework setup
-# Add better try excepts
- 
-if __name__ == "__main__":
-    Info = ConfigParser()
-    Info.read("Data/info.ini")
 
-    url = Info["ffmpeg"]["downloadLink"]
-    print("Downloading ffmpeg.zip...")
-    rContent = requests.get(url)
-    print("ffmpeg.zip downloaded.")
+path_main = checkFunctions.checkIfInProjectPath() 
+error_sufix = "ERROR!\n\n"
 
-    print("Creating Temp/...")
-    try:
-        os.mkdir("Temp")
-    except OSError:
-        print ("Error creating folder.")
-    print ("Temp/ was successfully created.")
+try:
+    path = path_main + "Data/info.ini"
+    if os.path.exists(path): 
+        local_data = configparser.ConfigParser()
+        local_data.read("Data/info.ini")
+except PermissionError:
+    print("You don't have permissions to read files.")
+    raise
+except BaseException:
+    print("Error 2: check Data/errorList.txt.")
+    raise
 
-    print("Saving ffmpeg.zip to Temp/...")
-    with open("Temp/ffmpeg.zip", "wb") as file:
-        file.write(rContent.content)
-    print("Saved successfully.")
-    
-    print("Unzipping ffmpeg.zip...")
-    with zipfile.ZipFile("Temp/ffmpeg.zip", "r") as zip_file:
-        zip_file.extractall("Temp/")
-    print("Unzipped successfully.")
+try:
+    if local_data["user_settings"]["setup_concluded"] == True:
+        print("You already runned this script do you wish to run it again? (y/n)")
+        print("It may cause problems and will probably give you lots of errors.")
+        op = input("Input: ").replace(" ", "")
+        if op in ["y", "yes"]:
+            local_data["user_settings"]["setup_concluded"] = False
+        else:
+            exit()
+except KeyError:
+    print("Please don't change Data/info.ini (if you don't what you are doing).")
+    print("To fix this problem download info.ini from https://github.com/Kaentos/pyYoutubeToMp3 and replace yours.")
+    raise
 
-    print("Copying necessary files...")
-    for file_name in os.listdir(f"Temp/{Info['ffmpeg']['fileName']}/bin"):
-        print(file_name)
-        shutil.copy(f"Temp/{Info['ffmpeg']['fileName']}/bin/{file_name}", f"venv/Scripts/{file_name}")
-    print("All files copied.")
+print("Creating necessary folders...", end=" ")
+try:
+    path = f"{path_main}/Downloads"
+    os.mkdir(path)
+except PermissionError:
+    print(f"{error_sufix}You don't have permissions to create folders here!")
+    raise
+except OSError:
+    print(f"{error_sufix}Downloads folder is already created. If you wish to run this script please delete {path}/.")
+    raise
+except BaseException:
+    print(f"{error_sufix}Error 3: check Data/errorList.txt.")
+    raise
+print("OK!")
 
-    print("Removing Temp/...")
-    shutil.rmtree("Temp/")
-    print("Temp/ removed.")
-
-    print("Creating necessary files and folders...")
-    os.mkdir("Downloads")
-    print("Downloads/ created.")
-    with open("url_input.txt", "w") as file:
-        file.write(Info["txt"]["example"])
-    print("url_input.txt created.")
+print("Extracting AtomicParsley...")
+try:
+    path
+    with zipfile.ZipFile("Setup/"):
+        exit()
+    path_dest = f"{pathlib.Path().absolute()}/Temp"
+except:
+    exit()
