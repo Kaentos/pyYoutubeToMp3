@@ -4,6 +4,7 @@ import requests
 import sys
 import pathlib
 import json
+from local_package import creationFunctions
 
 
 
@@ -57,20 +58,12 @@ def checkIfInProjectPath():
         path_main = path_main[0] + path_main[1] + "/"
         return path_main
 
-def checkIfFolderExists(name):
-    path_main = checkIfInProjectPath()
-    path = os.path.join(path_main, name)
-    if not os.path.exists(path):
-        print("Missing folder. Creating a new one...", end=" ")
-        try:
-            os.mkdir(path)
-        except PermissionError:
-            print("You do not have enough permissions to create folders.")
-            raise
-        except BaseException:
-            raise BaseException("Cannot create folder")
-        print("OK!")
-        return path
+def checkIfFolderExists(name, create):
+    path = os.getcwd().replace("\\", "/") + f"/{name}"
+    if not os.path.exists(path) and create:
+        return creationFunctions.createFolder(path)
+    elif create == False:
+        print(f"Missing {name}")
     else:
         return path
 

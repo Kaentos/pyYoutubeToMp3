@@ -45,26 +45,23 @@ except KeyError:
     print("To fix this problem download info.ini from https://github.com/Kaentos/pyYoutubeToMp3 and replace yours.")
     raise
 
-print("Creating necessary folders...", end=" ")
-try:
-    path = f"{path_main}/Downloads"
-    os.mkdir(path)
-except PermissionError:
-    print(f"{error_sufix}You don't have permissions to create folders here!")
-    raise
-except OSError:
-    print(f"{error_sufix}Downloads folder is already created. If you wish to run this script please delete {path}/.")
-    raise
-except BaseException:
-    print(f"{error_sufix}Error 3: check Data/errorList.txt.")
-    raise
-print("OK!")
 
-print("Extracting AtomicParsley...")
-try:
-    path
-    with zipfile.ZipFile("Setup/"):
-        exit()
-    path_dest = f"{pathlib.Path().absolute()}/Temp"
-except:
-    exit()
+
+## Creation of folders
+print("Creating necessary folders...", end=" ")
+result = checkFunctions.checkIfFolderExists("Downloads", True)
+print(result)
+print("OK!")
+## End creation of folders
+exit()
+
+
+if os.sys.platform == "win32":
+    print("Extracting AtomicParsley...")
+    try:
+        path_dest = checkFunctions.checkIfFolderExists("Data/Temp/Temp2", True)
+        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_fileName']}") ,"r") as zip_file:
+            zip_file.extractall(path_dest)
+        
+    except BaseException:
+        raise
