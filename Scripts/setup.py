@@ -49,19 +49,16 @@ except KeyError:
 
 ## Creation of folders
 print("Creating necessary folders...", end=" ")
-result = checkFunctions.checkIfFolderExists("Downloads", True)
-print(result)
+result = checkFunctions.checkIfFolderExists(name="Downloads", create=True)
 print("OK!")
 ## End creation of folders
-exit()
-
 
 if os.sys.platform == "win32":
-    print("Extracting AtomicParsley...")
+    print("Extracting AtomicParsley...", end=" ")
     try:
-        path_dest = checkFunctions.checkIfFolderExists("Data/Temp/Temp2", True)
-        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_fileName']}") ,"r") as zip_file:
+        path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/AP", create=True)
+        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_fileName']}", False) ,"r") as zip_file:
             zip_file.extractall(path_dest)
-        
     except BaseException:
         raise
+    print("OK!")

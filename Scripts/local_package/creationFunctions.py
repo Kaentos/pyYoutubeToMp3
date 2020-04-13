@@ -13,3 +13,10 @@ def createFolder(path):
         print("Error 3: check Data/errorList.txt.")
         raise
     return path
+
+def createFile(path):
+    try:
+        with open(path, "w") as f:
+            f.close()
+    except BaseException:
+        raise BaseException("Cannot create file.")

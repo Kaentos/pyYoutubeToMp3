@@ -47,7 +47,7 @@ def checkOutDatedPackages(issueLink):
 
 
 
-## Files/Folders related
+## Files/Folders/Path related
 def checkIfInProjectPath():
     project_name = "pyYoutubeDownloader"
     if project_name not in os.getcwd():
@@ -58,29 +58,26 @@ def checkIfInProjectPath():
         path_main = path_main[0] + path_main[1] + "/"
         return path_main
 
-def checkIfFolderExists(name, create):
+def checkIfFolderExists(name, create:bool):
     path = os.getcwd().replace("\\", "/") + f"/{name}"
     if not os.path.exists(path) and create:
         return creationFunctions.createFolder(path)
-    elif create == False:
-        print(f"Missing {name}")
+    elif not os.path.exists(path) and create == False:
+        print(f"Missing {path}.")
+        exit()
     else:
         return path
 
-def checkIfFileExists(name):
+def checkIfFileExists(name, create:bool):
     path = os.path.join(pathlib.Path().absolute(), name)
-    if not os.path.exists(path):
-        print("Missing file. Creating a new one...")
-        try:
-            with open(path, "w") as f:
-                f.close()
-        except BaseException:
-            raise BaseException("Cannot create file.")
-        print("Done.")
-        return path
+    if not os.path.exists(path) and create:
+        return creationFunctions.createFile(path)
+    elif not os.path.exists(path) and create == False:
+        print(f"Missing {path}.")
+        exit()
     else:
         return path
-## end files/folders
+## end files/folders/path
 
 
 

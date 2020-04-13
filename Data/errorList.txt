@@ -13,6 +13,7 @@ Open an issue here: https://github.com/Kaentos/pyYoutubeToMp3/issues
     Fix: Download .init file again from the github repository.
 
 3 :
+    Location: local_package/createFunctions.py
     Type: BaseException
     Description: When tring to create a folder it doesn't give permission nor OS errors, meaning there must be other unknown problem.
     Fix: Open an issue and tell what you did so far.
