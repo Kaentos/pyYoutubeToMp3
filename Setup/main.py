@@ -4,23 +4,18 @@ try:
     import configparser
     import os
     import zipfile
+    from Scripts import checkFunctions
 except ImportError:
-    print("Please make sure you have installed all the packages in requirements.txt to the venv.")
+    print("Please make sure you have installed all the packages referenced in requirements.txt into the venv and you have all the scripts in Scripts/.")
+    print("If you don't have files please download from: https://github.com/Kaentos/pyYoutubeToMp3")
     raise
 except BaseException:
     print("Error 1: check Data/errorList.txt.")
     raise
 print("OK!")
 
-project_name = "pyYoutubeDownloader"
-if project_name not in os.getcwd():
-    print(f"Please execute this script inside project folder ({project_name}).")
-    exit()
-else:
-    path_main = os.getcwd().replace("\\", "/").partition(project_name)
-    path_main = path_main[0] + path_main[1] + "/"
-    del project_name
-    error_sufix = "ERROR!\n\n"
+path_main = checkFunctions.checkIfInProjectPath() 
+error_sufix = "ERROR!\n\n"
 
 try:
     path = path_main + "Data/info.ini"

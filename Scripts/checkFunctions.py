@@ -47,15 +47,29 @@ def checkOutDatedPackages(issueLink):
 
 
 ## Files/Folders related
+def checkIfInProjectPath():
+    project_name = "pyYoutubeDownloader"
+    if project_name not in os.getcwd():
+        print(f"Please execute this script inside project folder (folder name must be: {project_name}).")
+        exit()
+    else:
+        path_main = os.getcwd().replace("\\", "/").partition(project_name)
+        path_main = path_main[0] + path_main[1] + "/"
+        return path_main
+
 def checkIfFolderExists(name):
-    path = os.path.join(pathlib.Path().absolute(), name)
+    path_main = checkIfInProjectPath()
+    path = os.path.join(path_main, name)
     if not os.path.exists(path):
-        print("Missing folder. Creating a new one...")
-        try: 
+        print("Missing folder. Creating a new one...", end=" ")
+        try:
             os.mkdir(path)
+        except PermissionError:
+            print("You do not have enough permissions to create folders.")
+            raise
         except BaseException:
             raise BaseException("Cannot create folder")
-        print("Done.")
+        print("OK!")
         return path
     else:
         return path
