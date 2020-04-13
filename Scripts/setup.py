@@ -56,9 +56,11 @@ print("OK!")
 if os.sys.platform == "win32":
     print("Extracting AtomicParsley...", end=" ")
     try:
-        path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/AP", create=True)
-        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_fileName']}", False) ,"r") as zip_file:
-            zip_file.extractall(path_dest)
+        path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/toMove", create=True)
+        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_zipName']}", False) ,"r") as zip_file:
+            for filename in zip_file.namelist():
+                if local_data["win32-setup"]["AP_fileName"] in filename:
+                    zip_file.extract(filename, path=path_dest)
     except BaseException:
         raise
     print("OK!")
