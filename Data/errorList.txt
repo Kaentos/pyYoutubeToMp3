@@ -1,0 +1,18 @@
+> Errors
+Open an issue here: https://github.com/Kaentos/pyYoutubeToMp3/issues 
+
+
+1 : 
+    Type: BaseException
+    Description: When trying to import packages in any file and it isn't ImportError, meaning there must be other unknown problem.
+    Fix: Remove project and download it again.
+
+2 :
+    Type: BaseException
+    Description: When trying to open .ini file it doesn't give permission nor OS erros, meaning there must be other unknown problem.
+    Fix: Download .init file again from the github repository.
+
+3 :
+    Type: BaseException
+    Description: When tring to create a folder it doesn't give permission nor OS errors, meaning there must be other unknown problem.
+    Fix: Open an issue and tell what you did so far.
