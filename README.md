@@ -1,7 +1,7 @@
 
-# Pytuber Converter
+# Youpyber Converter
 
-Pytuber Converter is CLI youtube video / playlist converter. It's like a "front-end" for the python library youtube-dl.
+Youpyber Converter is CLI youtube video / playlist converter. It's like a "front-end" for the python library youtube-dl.
 
 # Prerequisites
 

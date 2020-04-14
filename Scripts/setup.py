@@ -53,7 +53,7 @@ if os.sys.platform == "win32":
         print("OK!")
         print("Moving AtomicParsley...", end=" ")
         try:
-            path_AP = path_dest + "/" + local_data["win32-setup"]["AP_fileName"]
+            path_AP = path_dest + "/" + local_data["win32-setup"]["AP_folderName"] + "/" + local_data["win32-setup"]["AP_fileName"]
             path_dest = path_main + "venv/Scripts"
             shutil.move(path_AP, path_dest)
             print("OK!")
@@ -64,7 +64,9 @@ if os.sys.platform == "win32":
             raise
         except BaseException:
             print(f"{error_sufix}Error 4: check Data/errorList.txt.")
+            raise
         
         print("Removing Temp folder...", end=" ")
         shutil.rmtree(f"{path_main}/Data/Temp")
+        print("OK!")
     

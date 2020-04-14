@@ -41,6 +41,7 @@ def checkOutDatedPackages(issueLink):
     try:
         outdated = subprocess.check_output(["pip", "list", "-o", "--format", "json"])
         outdated = [package["name"] for package in json.loads(outdated)]
+        outdated.remove("pip")
         if outdated:
             print("Outdated packages: ", outdated)
             updatePackages(outdated, issueLink)
@@ -48,7 +49,8 @@ def checkOutDatedPackages(issueLink):
         else:
             print("All packages are updated")
     except BaseException:
-        raise BaseException(f"If it keeps giving you this error report it to: {issueLink}")
+        print(f"If it keeps giving you this error report it to: {issueLink}")
+        raise
 ## end of python
 
 
