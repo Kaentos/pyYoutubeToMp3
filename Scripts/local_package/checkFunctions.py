@@ -1,13 +1,16 @@
-import os
-import subprocess
-import requests
-import sys
-import pathlib
-import json
-import configparser
-from local_package import creationFunctions
-from local_package import getFunctions
-
+try:
+    import os
+    import subprocess
+    import requests
+    import sys
+    import pathlib
+    import json
+    import configparser
+    from local_package import creationFunctions
+    from local_package import getFunctions
+except ImportError:
+    print("\n\nPlease install the missing package with 'pip install <package_name>' into to the venv.")
+    raise
 
 
 ## OS related
@@ -51,14 +54,19 @@ def checkOutDatedPackages(issueLink):
 
 ## Files/Folders/Path related
 def checkIfInProjectPath():
-    project_name = getFunctions.getLocalData()["project-details"]["name"]
-    if project_name == None or project_name not in os.getcwd():
-        print(f"Please execute this script inside project folder (folder name must be: {project_name}).")
-        exit()
+    project_name = getFunctions.getLocalData()["project-details"]
+    project_name = [project_name["name"], project_name["name_branch"]]
+    if project_name[0] and os.getcwd().endswith(project_name[0]):
+        project_name = project_name[0]
+    elif project_name[1] and os.getcwd().endswith(project_name[1]):
+        project_name = project_name[1]
     else:
-        path_main = os.getcwd().replace("\\", "/").partition(project_name)
-        path_main = path_main[0] + path_main[1] + "/"
-        return path_main
+        print("Run this script inside project folder!")
+        exit()
+
+    path_main = os.getcwd().replace("\\", "/").partition(project_name)
+    path_main = path_main[0] + path_main[1] + "/"
+    return path_main
 
 def checkIfFolderExists(name, create:bool):
     path = os.getcwd().replace("\\", "/") + f"/{name}"
@@ -106,9 +114,3 @@ def checkURLfromFile(issueLink):
     print(f"Valid urls: {valid_urls}")
     return valid_urls
 ## end of main.py
-
-
-
-if __name__ == "__main__":
-    print("Run main.py!")
-    exit()

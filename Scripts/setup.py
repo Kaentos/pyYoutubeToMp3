@@ -9,11 +9,7 @@ try:
     from local_package import checkFunctions
     from local_package import getFunctions
 except ImportError:
-    print("ERROR!\n\nPlease make sure you have installed all the packages referenced in requirements.txt into the venv and you have all the scripts in Scripts/.")
-    print("If you don't have files please download from: https://github.com/Kaentos/pyYoutubeToMp3")
-    raise
-except BaseException:
-    print("Error 1: check Data/errorList.txt.")
+    print("\n\nPlease install the missing package with 'pip install <package_name>' into to the venv.")
     raise
 print("OK!")
 
@@ -44,7 +40,7 @@ if os.sys.platform == "win32":
     print("Extracting AtomicParsley...", end=" ")
     try:
         if not checkFunctions.checkIfFolderExists(name="Data/Temp", create=False):
-            print("Missing Temp Files...")
+            print(f"{error_sufix}Missing Temp Files. Please download them again.")
             exit()
         path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/toMove", create=True)
         with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_zipName']}", False) ,"r") as zip_file:
