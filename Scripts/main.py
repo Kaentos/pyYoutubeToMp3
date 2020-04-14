@@ -49,14 +49,14 @@ def getPlaylistURL(alias):
 
 def downloadFromFile(alias, did_download, checkLink):
     while True:
-        openFile("url_input.txt")
+        openFile("url_input.txt", True)
         print("\nPlease make sure you have one line with only one link (one line for each link, use break / enter)")
         print("\nDid you input all urls? (yes: continue, no: open file again, back: back)")
         op = getOP()
         if op in ["yes", "y"]:
             urls = checkFunctions.checkURLfromFile(checkLink)
             downloadMultiple(urls, downloadOptions.getOptions())
-            openFolder(os.path.join("Downloads", downloadOptions.folderName))
+            openFolder(os.path.join("Downloads", downloadOptions.folderName), False)
             did_download = True
             return did_download
         elif op in alias["back"]:
@@ -74,15 +74,15 @@ def downloadMultiple(urls, ytdl_options):
         with YoutubeDL(ytdl_options) as ytdl:
             ytdl.download([url])
 
-def openFolder(name):
-    path = checkFunctions.checkIfFolderExists(name)
+def openFolder(name, create):
+    path = checkFunctions.checkIfFolderExists(name, create)
     if path:
         subprocess.call([user_os[1], path])
     else:
         raise BaseException(f"The folder you trying to open has an error please open an issue at: {local_data['repo']['issueLink']}")
 
-def openFile(name):
-    path = checkFunctions.checkIfFileExists(name)
+def openFile(name, create):
+    path = checkFunctions.checkIfFileExists(name, create)
     if path:
         subprocess.call([user_os[1], path])
     else:
@@ -172,7 +172,7 @@ while True: # Main loop
                     url = getVideoURL(alias)
                     if url:
                         downloadOne(url, downloadOptions.getOptions())
-                        openFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        openFolder(os.path.join("Downloads", downloadOptions.folderName), False)
                         did_download = True
                 elif op in alias[">1video"]:
                     downloadOptions.isPlaylist = False
@@ -182,7 +182,7 @@ while True: # Main loop
                     url = getPlaylistURL(alias)
                     if url:
                         downloadOne(url, downloadOptions.getOptions())
-                        openFolder(os.path.join("Downloads", downloadOptions.folderName))
+                        openFolder(os.path.join("Downloads", downloadOptions.folderName), False)
                         did_download = True
                 elif op in alias[">1playlist"]:
                     downloadOptions.isPlaylist = True
@@ -205,7 +205,7 @@ while True: # Main loop
 
 
     elif op == "2": # open download folder
-        openFolder("Downloads")
+        openFolder("Downloads", True)
     elif op == "3": # settings
         # Can clear downloads / remove all folders inside downloads
         print("Coming soon...")

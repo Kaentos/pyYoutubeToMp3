@@ -1,7 +1,7 @@
 
 # Youpyber Converter
 
-Youpyber Converter is CLI youtube video / playlist converter. It's like a "front-end" for the python library youtube-dl.
+Youpyber Converter is CLI youtube video / playlist converter. It's like a "front-end" for the python library youtube-dl. Only converts youtube videos to audio (.mp3 and .m4a) and video (.mp4, .webm).
 
 # Prerequisites
 
