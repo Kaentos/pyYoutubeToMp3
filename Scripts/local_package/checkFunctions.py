@@ -4,7 +4,9 @@ import requests
 import sys
 import pathlib
 import json
+import configparser
 from local_package import creationFunctions
+from local_package import getFunctions
 
 
 
@@ -49,8 +51,8 @@ def checkOutDatedPackages(issueLink):
 
 ## Files/Folders/Path related
 def checkIfInProjectPath():
-    project_name = "pyYoutubeDownloader"
-    if project_name not in os.getcwd():
+    project_name = getFunctions.getLocalData()["project-details"]["name"]
+    if project_name == None or project_name not in os.getcwd():
         print(f"Please execute this script inside project folder (folder name must be: {project_name}).")
         exit()
     else:
@@ -60,23 +62,21 @@ def checkIfInProjectPath():
 
 def checkIfFolderExists(name, create:bool):
     path = os.getcwd().replace("\\", "/") + f"/{name}"
-    if not os.path.exists(path) and create:
+    if os.path.exists(path):
+        return path
+    elif not os.path.exists(path) and create:
         return creationFunctions.createFolder(path)
     elif not os.path.exists(path) and create == False:
-        print(f"Missing {path}.")
-        exit()
-    else:
-        return path
+        return False
 
 def checkIfFileExists(name, create:bool):
-    path = os.path.join(pathlib.Path().absolute(), name)
-    if not os.path.exists(path) and create:
+    path = os.getcwd().replace("\\", "/") + f"/{name}"
+    if os.path.exists(path):
+        return path
+    elif not os.path.exists(path) and create:
         return creationFunctions.createFile(path)
     elif not os.path.exists(path) and create == False:
-        print(f"Missing {path}.")
-        exit()
-    else:
-        return path
+        return False
 ## end files/folders/path
 
 
