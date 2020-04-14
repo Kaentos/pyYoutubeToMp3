@@ -37,36 +37,34 @@ print("OK!")
 ## End creation of folders
 
 if os.sys.platform == "win32":
-    print("Extracting AtomicParsley...", end=" ")
-    try:
-        if not checkFunctions.checkIfFolderExists(name="Data/Temp", create=False):
-            print(f"{error_sufix}Missing Temp Files. Please download them again.")
-            exit()
-        path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/toMove", create=True)
-        with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_zipName']}", False) ,"r") as zip_file:
-            for filename in zip_file.namelist():
-                if local_data["win32-setup"]["AP_fileName"] in filename:
-                    zip_file.extract(filename, path=path_dest)
-    except BaseException:
-        raise
-    print("OK!")
-    print("Moving AtomicParsley...", end=" ")
-    try:
-        if checkFunctions.checkIfFileExists(name=f"venv/Scripts/{local_data['win32-setup']['AP_fileName']}", create=False) == False:
+    if checkFunctions.checkIfFileExists(name=f"venv/Scripts/{local_data['win32-setup']['AP_fileName']}", create=False) == False:
+        print("Extracting AtomicParsley...", end=" ")
+        try:
+            if not checkFunctions.checkIfFolderExists(name="Data/Temp", create=False):
+                print(f"{error_sufix}Missing Temp Files. Please download them again.")
+                exit()
+            path_dest = checkFunctions.checkIfFolderExists(name="Data/Temp/toMove", create=True)
+            with zipfile.ZipFile(checkFunctions.checkIfFileExists(f"Data/Temp/{local_data['win32-setup']['AP_zipName']}", False) ,"r") as zip_file:
+                for filename in zip_file.namelist():
+                    if local_data["win32-setup"]["AP_fileName"] in filename:
+                        zip_file.extract(filename, path=path_dest)
+        except BaseException:
+            raise
+        print("OK!")
+        print("Moving AtomicParsley...", end=" ")
+        try:
             path_AP = path_dest + "/" + local_data["win32-setup"]["AP_fileName"]
             path_dest = path_main + "venv/Scripts"
             shutil.move(path_AP, path_dest)
             print("OK!")
-        else:
-            print("NOT NEEDED, OK!")
-            pass
-    except PermissionError:
-        print(f"{error_sufix}You don't have permissions to move files!")
-        raise
-    except OSError:
-        raise
-    except BaseException:
-        print(f"{error_sufix}Error 4: check Data/errorList.txt.")
-    
-    print("Removing Temp folder...", end=" ")
+        except PermissionError:
+            print(f"{error_sufix}You don't have permissions to move files!")
+            raise
+        except OSError:
+            raise
+        except BaseException:
+            print(f"{error_sufix}Error 4: check Data/errorList.txt.")
+        
+        print("Removing Temp folder...", end=" ")
+        shutil.rmtree(f"{path_main}/Data/Temp")
     

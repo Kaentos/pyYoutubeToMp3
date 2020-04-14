@@ -6,6 +6,7 @@ try:
     import pathlib
     import json
     import configparser
+    import time
     from local_package import creationFunctions
     from local_package import getFunctions
 except ImportError:
@@ -59,7 +60,9 @@ def checkIfInProjectPath():
     if project_name[0] and os.getcwd().endswith(project_name[0]):
         project_name = project_name[0]
     elif project_name[1] and os.getcwd().endswith(project_name[1]):
+        print(f"It's recommened to rename project folder from {project_name[1]} to {project_name[0]}")
         project_name = project_name[1]
+        time.sleep(3)
     else:
         print("Run this script inside project folder!")
         exit()
